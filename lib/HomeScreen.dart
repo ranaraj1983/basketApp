@@ -79,14 +79,14 @@ class home extends State<Home_screen> {
     final Orientation orientation = MediaQuery.of(context).orientation;
     final ThemeData theme = Theme.of(context);
     final TextStyle titleStyle =
-        theme.textTheme.headline.copyWith(color: Colors.black54);
+        theme.textTheme.headline5.copyWith(color: Colors.black54);
     final TextStyle descriptionStyle = theme.textTheme.subhead;
     ShapeBorder shapeBorder;
 
 
     return Scaffold(
       appBar: new AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.greenAccent,
 
         title: Text("Grocery store"),
         actions: <Widget>[
@@ -119,7 +119,7 @@ class home extends State<Home_screen> {
                   children: <Widget>[
                     new IconButton(
                         icon: new Icon(
-                          Icons.shopping_cart,
+                          Icons.add_shopping_cart,
                           color: Colors.black,
                         ),
                         onPressed: (){

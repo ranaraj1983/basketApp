@@ -1,29 +1,40 @@
 import 'package:basketapp/Cart_Screen.dart';
 import 'package:basketapp/checkout_screen.dart';
+import 'package:basketapp/model/Address_model.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Item_Details extends StatefulWidget {
+  //Item_Details(data);
+  DocumentSnapshot dataSource;
+  String toolbarname;
+  Item_Details( {Key key, this.toolbarname, this.dataSource }) : super(key: key);
+
+  //DocumentSnapshot snapshot ;
+  //Item_Details(toolbarname, {Key key, this.toolbarname }) : super(key: key);
   @override
-  State<StatefulWidget> createState() => item_details();
+  State<StatefulWidget> createState() => item_details(toolbarname,dataSource);
 }
 
 class item_details extends State<Item_Details> {
-  String toolbarname = 'Fruiys & Vegetables';
+  String toolbarname;
+  DocumentSnapshot dataSource;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List list = ['12', '11'];
 
   String itemname = 'Apple';
   int item = 0;
   String itemprice= '\$15';
-
+  item_details(this.toolbarname,this.dataSource);
 
   @override
   Widget build(BuildContext context) {
+    print(this.dataSource.data['itemId']);
     // TODO: implement build
     final ThemeData theme = Theme.of(context);
     final TextStyle titleStyle =
-    theme.textTheme.headline.copyWith(color: Colors.white);
+    theme.textTheme.headline5.copyWith(color: Colors.white);
     final TextStyle descriptionStyle = theme.textTheme.subhead;
     IconData _backIcon() {
       switch (Theme.of(context).platform) {
@@ -151,30 +162,8 @@ class item_details extends State<Item_Details> {
                           new Container(
                             child: new Carousel(
                               images: [
-                                new AssetImage(
-                                  'images/apple.jpg',
-                                  // package: destination.assetPackage,
-                                ),
-                                new AssetImage(
-                                  'images/tomato.jpg',
-                                  // package: destination.assetPackage,
-                                ),
-                                new AssetImage(
-                                  'images/lemons.jpg',
-                                  // package: destination.assetPackage,
-                                ),
-                                new AssetImage(
-                                  'images/kiwi.jpg',
-                                  // package: destination.assetPackage,
-                                ),
-                                new AssetImage(
-                                  'images/guava.jpg',
-                                  // package: destination.assetPackage,
-                                ),
-                                new AssetImage(
-                                  'images/grapes.jpg',
-                                  // package: destination.assetPackage,
-                                ),
+                                NetworkImage(this.dataSource.data['imageUrl']),
+
                               ],
                               boxFit: BoxFit.scaleDown,
                               showIndicator: false,
@@ -202,7 +191,7 @@ class item_details extends State<Item_Details> {
                  Padding(
                  padding: const EdgeInsets.only(bottom: 8.0),
                  child: Text(
-                 itemname,
+                   this.dataSource.data['itemName'],
                  style: descriptionStyle.copyWith(
                    fontSize: 20.0,
                  fontWeight: FontWeight.bold,
@@ -212,7 +201,7 @@ class item_details extends State<Item_Details> {
              Padding(
                padding: const EdgeInsets.only(bottom: 8.0),
                child: Text(
-                 itemprice,
+                 "INR " + this.dataSource.data['price'],
                  style: descriptionStyle.copyWith(
                    fontSize: 20.0,
                      color: Colors.black54),
@@ -279,6 +268,7 @@ class item_details extends State<Item_Details> {
                                           child: const Text('Add'),
                                           textColor: Colors.amber.shade500,
                                           onPressed: () {
+
                                             Navigator.push(context, MaterialPageRoute(builder: (context)=> Cart_screen()));
                                           },
                                           shape: new OutlineInputBorder(

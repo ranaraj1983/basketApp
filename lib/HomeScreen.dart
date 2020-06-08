@@ -3,6 +3,7 @@ import 'package:basketapp/help_screen.dart';
 import 'package:basketapp/item_screen.dart';
 import 'package:basketapp/logind_signup.dart';
 import 'package:basketapp/orderhistory_screen.dart';
+import 'package:basketapp/services/Navigation_Drwer.dart';
 import 'package:basketapp/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_search_bar/loader_search_bar.dart';
@@ -33,7 +34,7 @@ class Photo {
 }
 
 class home extends State<Home_screen> {
-  List list = ['12', '11'];
+  List list = ['12', '11', '2'];
 
   List<Photo> photos = <Photo>[
     Photo(
@@ -153,94 +154,7 @@ class home extends State<Home_screen> {
           )
         ],
       ),
-      drawer: new Drawer(
-        child: new ListView(
-          children: <Widget>[
-            new Card(
-              child: UserAccountsDrawerHeader(
-                accountName: new Text("Naomi A. Schultz"),
-                accountEmail: new Text("NaomiASchultz@armyspy.com"),
-                onDetailsPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Account_Screen()));
-                },
-                decoration: new BoxDecoration(
-                  backgroundBlendMode: BlendMode.difference,
-                  color: Colors.white30,
-
-                   image: new DecorationImage(
-                  image: new ExactAssetImage('assets/images/lake.jpeg'),
-                  fit: BoxFit.cover,
-                ),
-                ),
-                currentAccountPicture: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        "https://www.fakenamegenerator.com/images/sil-female.png")),
-              ),
-            ),
-            new Card(
-              elevation: 4.0,
-              child: new Column(
-                children: <Widget>[
-                  new ListTile(
-                      leading: Icon(Icons.favorite),
-                      title: new Text(name),
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: name,)));
-                      }),
-                  new Divider(),
-                  new ListTile(
-                      leading: Icon(Icons.history),
-                      title: new Text("Order History "),
-
-
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> Oder_History(toolbarname: ' Order History',)));
-
-                      }),
-                ],
-              ),
-            ),
-            new Card(
-              elevation: 4.0,
-              child: new Column(
-                children: <Widget>[
-                  new ListTile(
-                      leading: Icon(Icons.settings),
-                      title: new Text("Setting"),
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> Setting_Screen(toolbarname: 'Setting',)));
-                      }),
-                  new Divider(),
-                  new ListTile(
-                      leading: Icon(Icons.help),
-                      title: new Text("Help"),
-                      onTap: () {
-
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> Help_Screen(toolbarname: 'Help',)));
-
-                      }),
-                ],
-              ),
-            ),
-            new Card(
-              elevation: 4.0,
-              child: new ListTile(
-                  leading: Icon(Icons.power_settings_new),
-                  title: new Text(
-                    "Logout",
-                    style:
-                        new TextStyle(color: Colors.redAccent, fontSize: 17.0),
-                  ),
-                  onTap: () {
-                    Navigator.push(context,MaterialPageRoute(builder: (context) => Login_Screen()));
-                  }),
-            )
-          ],
-        ),
-      ),
+      drawer: Navigation_Drawer(),
       body: new SingleChildScrollView(
         child: Container(
           child: new Column(children: <Widget>[
@@ -251,7 +165,7 @@ class home extends State<Home_screen> {
                   _verticalD(),
                   new GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
+                      //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
                     },
                     child: new Text(
                       'Best value',
@@ -264,7 +178,7 @@ class home extends State<Home_screen> {
                   _verticalD(),
                   new GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
+                      //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
                     },
                     child: new Text(
                       'Top sellers',
@@ -280,7 +194,7 @@ class home extends State<Home_screen> {
                     children: <Widget>[
                       new GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
+                          //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
                         },
                         child: new Text(
                           'All',
@@ -490,7 +404,7 @@ class home extends State<Home_screen> {
                     _verticalD(),
                     new GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
+                        //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
                       },
                       child: new Text(
                         'Categories',
@@ -503,7 +417,7 @@ class home extends State<Home_screen> {
                     _verticalD(),
                     new GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
+                        //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
                       },
                       child: new Text(
                         'Popular',
@@ -518,7 +432,7 @@ class home extends State<Home_screen> {
                       children: <Widget>[
                         new GestureDetector(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
+                            //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
                           },
                           child: new Text(
                             'Whats New',
@@ -547,7 +461,7 @@ class home extends State<Home_screen> {
                     return new GestureDetector(
                       onTap: (){
 
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
+                        //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
                       },
 
                         child: new Container(
@@ -579,7 +493,7 @@ class home extends State<Home_screen> {
                                             alignment: Alignment.bottomLeft,
                                             child: new GestureDetector(
                                               onTap: () {
-                                                Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
+                                                //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
                                               },
                                               child: new Text(
                                                 photos[index].title,

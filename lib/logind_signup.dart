@@ -1,6 +1,16 @@
+import 'dart:async';
+
 import 'package:basketapp/HomeScreen.dart';
+import 'package:basketapp/database/Auth.dart';
+import 'package:basketapp/model/User.dart';
 import 'package:basketapp/signup_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'database/DataCollection.dart';
+
 
 class Login_Screen extends StatefulWidget {
 
@@ -13,7 +23,9 @@ class Login_Screen extends StatefulWidget {
   final FormFieldValidator<String> validator;
   final ValueChanged<String> onFieldSubmitted;
 
-  const Login_Screen({Key key, this.fieldKey, this.hintText, this.labelText, this.helperText, this.onSaved, this.validator, this.onFieldSubmitted}) : super(key: key);
+  const Login_Screen({Key key, this.fieldKey, this.hintText, this.labelText,
+    this.helperText, this.onSaved, this.validator,
+    this.onFieldSubmitted}) : super(key: key);
 
   ThemeData buildTheme() {
     final ThemeData base = ThemeData();
@@ -62,7 +74,7 @@ class login extends State<Login_Screen> {
         key: scaffoldKey,
         appBar: new AppBar(
           title: Text('Login'),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.deepOrangeAccent,
         ),
         body: SafeArea(
           child: new SingleChildScrollView(
@@ -78,6 +90,7 @@ class login extends State<Login_Screen> {
                       _verticalD(),
                       new GestureDetector(
                         onTap: () {
+
                           /* Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -177,12 +190,24 @@ class login extends State<Login_Screen> {
                                             margin: EdgeInsets.only(left: 10.0),
                                             child: new GestureDetector(
                                               onTap: (){
+                                                  debugPrint("inside forgot password");
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context){
+                                                        return AlertDialog(
+                                                          title: Text("test"),
+                                                          content: Text("test")
+                                                        );
+                                                      }
+                                                  );
 
                                               },
                                               child: Text('FORGOT PASSWORD?',style: TextStyle(
                                                   color: Colors.blueAccent,fontSize: 13.0
                                               ),),
+
                                             ),
+
                                           ),
                                           new Container(
                                             alignment: Alignment.bottomRight,
@@ -248,7 +273,7 @@ class login extends State<Login_Screen> {
 
       // Email & password matched our validation rules
       // and are saved to _email and _password fields.
-      _performLogin();
+      performLogin(_email,_password);
     }
     else{
       showInSnackBar('Please fix the errors in red before submitting.');
@@ -261,13 +286,44 @@ class login extends State<Login_Screen> {
         content: Text(value)
     ));
   }
-  void _performLogin() {
-    // This is just a demo, so no actual login here.
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> Home_screen()));
+    User x = new User();
+    void useValue(val){
+      User u = new User(
+        uid: val.uid,
+        email: val.email,
+        displayName: val.displayName,
+        photoUrl: val.photoUrl,
+      );
+      x = u;
+
+      debugPrint("this is my user value: " + x.email);
+    }
+    void _getItem(){
+      new DataCollection().getDataFromDatabase();
+    }
+   void performLogin (email, password) async{
+
+    _getItem();
+   /* Future<FirebaseUser> user = new Auth().signIn(email, password);
+    new Timer(new Duration(milliseconds: 2), () {
+
+      user.then((value) { useValue(value); },
+          onError: (e) { handleError(e); });
+    });
+
+
+    //auth.then((user) => userId = user.uid);
+    debugPrint("inside log in function _performLogin: " + x.uid);*/
+    
+    //Navigator.push(context, MaterialPageRoute(builder: (context)=> Home_screen()));
   }
 
   _verticalD() => Container(
         margin: EdgeInsets.only(left: 10.0, right: 0.0, top: 0.0, bottom: 0.0),
       );
+
+  void handleError(e) {
+    debugPrint(e);
+  }
 
   }

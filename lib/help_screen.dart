@@ -28,7 +28,7 @@ class Help extends State<Help_Screen> {
     // TODO: implement build
     final ThemeData theme = Theme.of(context);
     final TextStyle dialogTextStyle =
-    theme.textTheme.subhead.copyWith(color: theme.textTheme.caption.color);
+    theme.textTheme.subtitle1.copyWith(color: theme.textTheme.caption.color);
 
     IconData _backIcon() {
       switch (Theme.of(context).platform) {

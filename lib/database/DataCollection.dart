@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:basketapp/model/Item.dart';
+import 'package:basketapp/model/ItemProduct.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 

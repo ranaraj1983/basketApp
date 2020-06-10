@@ -10,6 +10,7 @@ class Item_Screen extends StatefulWidget {
 }
 
 class _itemPageState extends State<Item_Screen> {
+
   Future getCategories() async {
     var firestore = Firestore.instance;
     QuerySnapshot qs = await firestore.collection("categories").getDocuments();
@@ -18,6 +19,7 @@ class _itemPageState extends State<Item_Screen> {
 
   @override
   Widget build(BuildContext context) {
+
     debugPrint("inside Item page");
 
     return new Scaffold(

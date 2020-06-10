@@ -1,9 +1,14 @@
 import 'package:basketapp/Cart_Screen.dart';
 import 'package:basketapp/checkout_screen.dart';
 import 'package:basketapp/model/Address_model.dart';
+import 'package:basketapp/model/ItemProduct.dart';
+import 'package:basketapp/services/Cart.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
+import 'package:provider/provider.dart';
 
 class Item_Details extends StatefulWidget {
   //Item_Details(data);
@@ -21,16 +26,18 @@ class item_details extends State<Item_Details> {
   String toolbarname;
   DocumentSnapshot dataSource;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  List list = ['12', '11'];
+  List<ItemProduct> list = [];
 
-  String itemname = 'Apple';
+  //String itemname = 'Apple';
   int item = 0;
-  String itemprice= '\$15';
+  //String itemprice= '\$15';
   item_details(this.toolbarname,this.dataSource);
+  ObservableList<ItemProduct> addtoCartList = new ObservableList<ItemProduct>();
 
   @override
   Widget build(BuildContext context) {
-    print(this.dataSource.data['itemId']);
+    final cart = Cart(addtoCartList);
+    //print(this.dataSource.data['itemId']);
     // TODO: implement build
     final ThemeData theme = Theme.of(context);
     final TextStyle titleStyle =
@@ -70,6 +77,12 @@ class item_details extends State<Item_Details> {
       assert(false);
       return null;
     }
+    int listSize =0;
+    if(cart.getCartList() !=null)
+      listSize = 0;
+    else
+      listSize = -1;
+
     return new Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
@@ -108,7 +121,8 @@ class item_details extends State<Item_Details> {
                           onPressed: (){
                             Navigator.push(context, MaterialPageRoute(builder: (context) =>Checkout()));
                           }),
-                      list.length == 0
+
+                      listSize <= 0
                           ? new Container()
                           : new Positioned(
                               child: new Stack(
@@ -116,17 +130,31 @@ class item_details extends State<Item_Details> {
                                 new Icon(Icons.brightness_1,
                                     size: 20.0, color: Colors.orange.shade500),
                                 new Positioned(
+
                                     top: 4.0,
                                     right: 5.5,
                                     child: new Center(
                                       child: new Text(
-                                        list.length.toString(),
+                                        "test",
+                                        //Cart(addtoCartList).getCartList().length.toString(),
                                         style: new TextStyle(
                                             color: Colors.white,
                                             fontSize: 11.0,
                                             fontWeight: FontWeight.w500),
                                       ),
                                     )),
+                                new Column(
+                                  children: <Widget>[
+                                    Text("Counter"),
+                                    Observer(
+                                      builder: (_) => Text(
+                                        '${cart.counter.value}'
+                                      ),
+
+                                    ),
+
+                                  ],
+                                ),
                               ],
                             )),
                     ],
@@ -228,7 +256,10 @@ class item_details extends State<Item_Details> {
                                       new IconButton(
                                         icon: Icon(_add_icon(),color: Colors.amber.shade500),
                                         onPressed: () {
-
+                                          AlertDialog(
+                                              title: Text("test"),
+                                              content: Text("test")
+                                          );
                                             item = item + 1;
 
                                         },
@@ -268,8 +299,36 @@ class item_details extends State<Item_Details> {
                                           child: const Text('Add'),
                                           textColor: Colors.amber.shade500,
                                           onPressed: () {
+                                            debugPrint("test add funtion");
+                                            cart.increment();
+                                            cart.addItemToCartList(
+                                                new ItemProduct(
+                                                    itemId:this.dataSource.data['itemId'],
+                                                    name: this.dataSource.data['itemName'],
+                                                    imageUrl:this.dataSource.data['imageUrl'],
+                                                    price:this.dataSource.data['price'],
+                                                    quantity: this.item.toString()
+                                                )
+                                            );
+                                            //cart.increment();
+                                            /*Cart(this.addtoCartList).addItemToCartList(
+                                                new ItemProduct(
+                                                    itemId:this.dataSource.data['itemId'],
+                                                    name: this.dataSource.data['itemName'],
+                                                    imageUrl:this.dataSource.data['imageUrl'],
+                                                    price:this.dataSource.data['price'],
+                                                    quantity: this.item.toString()
+                                                )
+                                            );*/
+                                            /*addtoCartList.add(new ItemProduct(
+                                                itemId:this.dataSource.data['itemId'],
+                                                name: this.dataSource.data['itemName'],
+                                                imageUrl:this.dataSource.data['imageUrl'],
+                                                price:this.dataSource.data['price'],
+                                                quantity: this.item.toString()
+                                            ));*/
 
-                                            Navigator.push(context, MaterialPageRoute(builder: (context)=> Cart_screen()));
+                                            //Navigator.push(context, MaterialPageRoute(builder: (context)=> Cart_screen(list:list.toList())));
                                           },
                                           shape: new OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(30.0),

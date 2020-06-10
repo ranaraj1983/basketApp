@@ -1,5 +1,6 @@
 import 'package:basketapp/checkout_screen.dart';
 import 'package:basketapp/item_screen.dart';
+import 'package:basketapp/model/ItemProduct.dart';
 import 'package:flutter/material.dart';
 
 enum DialogDemoAction {
@@ -9,21 +10,26 @@ enum DialogDemoAction {
   agree,
 }
 class Cart_screen extends StatefulWidget {
+  List<ItemProduct> list;
+
+  Cart_screen( {Key key, this.list }) : super(key: key);
   @override
-  State<StatefulWidget> createState() => Cart();
+  State<StatefulWidget> createState() => Cart_Product_Item(list);
 }
 
-class Item {
+/*class Item {
   final String itemImage;
   final String itemName;
   final String itemQun;
   final String itemPrice;
 
   Item({this.itemImage, this.itemName, this.itemQun, this.itemPrice});
-}
+}*/
 
-class Cart extends State<Cart_screen> {
-  List<Item> itemList = <Item>[
+class Cart_Product_Item extends State<Cart_screen> {
+  List<ItemProduct> itemList;
+  Cart_Product_Item(this.itemList);
+ /* List<Item> itemList = <Item>[
     Item(
         itemImage: 'images/grapes.jpg',
         itemName: 'Black Grape',
@@ -54,7 +60,7 @@ class Cart extends State<Cart_screen> {
         itemName: 'Apple',
         itemQun: 'Qty:1',
         itemPrice: '\₹ 50'),
-  ];
+  ];*/
   String toolbarname = 'My Cart (4)';
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -252,7 +258,7 @@ class Cart extends State<Cart_screen> {
                   left: 12.0, top: 5.0, right: 12.0, bottom: 10.0),
               height: hh,
               child: ListView.builder(
-                  itemCount: itemList.length,
+                  itemCount: this.itemList.length,
                   itemBuilder: (BuildContext cont, int ind) {
                     return SafeArea(
                         child: Container(
@@ -274,10 +280,15 @@ class Cart extends State<Cart_screen> {
                                               SizedBox(
                                                   height: 110.0,
                                                   width: 100.0,
-                                                  child: Image.asset(
-                                                    itemList[ind].itemImage,
-                                                    fit: BoxFit.fill,
-                                                  )),
+                                                  child:
+                                                  Image.network(
+                                                    itemList[ind]
+                                                        .imageUrl,
+                                                    height: 100,
+                                                    width: 100,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                              ),
                                               SizedBox(
                                                   height: 110.0,
                                                   child: Container(
@@ -295,7 +306,7 @@ class Cart extends State<Cart_screen> {
                                                           children: <Widget>[
                                                             Text(
                                                               itemList[ind]
-                                                                  .itemName,
+                                                                  .name,
                                                               style: TextStyle(
                                                                   fontWeight:
                                                                   FontWeight
@@ -314,7 +325,7 @@ class Cart extends State<Cart_screen> {
                                                           children: <Widget>[
                                                             Text(
                                                               itemList[ind]
-                                                                  .itemPrice,
+                                                                  .price,
                                                               style: TextStyle(
                                                                   fontSize: 15.0,
                                                                   color:
@@ -386,7 +397,7 @@ class Cart extends State<Cart_screen> {
                                           child: Container(
                                             alignment: Alignment.center,
                                             child: Text(
-                                              itemList[ind].itemPrice,
+                                              itemList[ind].price,
                                             ),
                                           )
 

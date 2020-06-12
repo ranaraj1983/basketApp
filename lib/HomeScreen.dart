@@ -165,7 +165,11 @@ class home extends State<Home_screen> {
                   _verticalD(),
                   new GestureDetector(
                     onTap: () {
-                      //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Item_Screen('Best value Products')));
                     },
                     child: new Text(
                       'Best value',
@@ -178,7 +182,9 @@ class home extends State<Home_screen> {
                   _verticalD(),
                   new GestureDetector(
                     onTap: () {
-                      //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) =>
+                              Item_Screen('Top sellers')));
                     },
                     child: new Text(
                       'Top sellers',
@@ -194,7 +200,9 @@ class home extends State<Home_screen> {
                     children: <Widget>[
                       new GestureDetector(
                         onTap: () {
-                          //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => Item_Screen('All Product')
+                          ));
                         },
                         child: new Text(
                           'All',

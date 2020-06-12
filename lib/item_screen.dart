@@ -1,15 +1,22 @@
 import 'package:basketapp/item_details.dart';
 import 'package:basketapp/model/Address_model.dart';
+import 'package:basketapp/widget/Custom_AppBar.dart';
+import 'package:basketapp/widget/Custom_Drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 class Item_Screen extends StatefulWidget {
+  String toolbarname;
+
+  Item_Screen(this.toolbarname);
+
   @override
-  _itemPageState createState() => _itemPageState();
+  _itemPageState createState() => _itemPageState(toolbarname);
 }
 
 class _itemPageState extends State<Item_Screen> {
+  _itemPageState(toolbarname);
 
   Future getCategories() async {
     var firestore = Firestore.instance;
@@ -19,10 +26,9 @@ class _itemPageState extends State<Item_Screen> {
 
   @override
   Widget build(BuildContext context) {
-
-    debugPrint("inside Item page");
-
     return new Scaffold(
+        appBar: Custom_AppBar().getAppBar(context),
+        drawer: Custom_Drawer().getDrawer(context),
         body: FutureBuilder(
             future: getCategories(),
             builder: (_, snapshot) {
@@ -48,7 +54,7 @@ class _itemPageState extends State<Item_Screen> {
 
                               Navigator.push(context, MaterialPageRoute(
                                   builder:
-                                  (context)=> Item_Details(toolbarname:snapshot.data[index].data['itemName'],dataSource:snapshot.data[index],)
+                                      (context)=> Item_Details(toolbarname:snapshot.data[index].data['itemName'],dataSource:snapshot.data[index],)
                               )
                               );
                             },
@@ -87,9 +93,24 @@ class _itemPageState extends State<Item_Screen> {
                                       IconButton(
                                         iconSize: 20,
                                         icon: const Icon(Icons.shopping_cart),
-                                        onPressed: ()=> Navigator.push(context,
+                                        onPressed: () =>
+                                            Custom_AppBar().
+                                            addItemToCart(
+                                                snapshot.data[index]
+                                                    .data['itemId'],
+                                                snapshot.data[index]
+                                                    .data['itemName'],
+                                                snapshot.data[index]
+                                                    .data['imageUrl'],
+                                                snapshot.data[index]
+                                                    .data['description'],
+                                                snapshot.data[index]
+                                                    .data['quantity'],
+                                                snapshot.data[index]
+                                                    .data['price']
+                                            ), /*Navigator.push(context,
                                             MaterialPageRoute(builder: (context)=>
-                                                Item_Details())),
+                                                Item_Details())),*/
                                       )
                                     ],
                                   ),
@@ -103,8 +124,6 @@ class _itemPageState extends State<Item_Screen> {
 
                         ),
                       );
-
-
                     });
               }
             }));

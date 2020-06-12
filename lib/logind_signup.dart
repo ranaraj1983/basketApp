@@ -289,33 +289,38 @@ class login extends State<Login_Screen> {
     User x = new User();
     void useValue(val){
       User u = new User(
-        uid: val.uid,
-        email: val.email,
-        displayName: val.displayName,
-        photoUrl: val.photoUrl,
-      );
-      x = u;
+      uid: val.uid,
+      email: val.email,
+      displayName: val.displayName,
+      photoUrl: val.photoUrl,
+    );
+    x = u;
 
-      debugPrint("this is my user value: " + x.email);
-    }
+    debugPrint("this is my user value: " + x.email);
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Home_screen()));
+  }
     void _getItem(){
       new DataCollection().getDataFromDatabase();
     }
-   void performLogin (email, password) async{
+   void performLogin (email, password) async {
+     //_getItem();
+     Future<FirebaseUser> user = new Auth().signIn(email, password);
+     new Timer(new Duration(milliseconds: 2), () {
+       user.then((value) {
+         useValue(value);
+       },
+           onError: (e) {
+             handleError(e);
+           });
+     });
 
-    _getItem();
-   /* Future<FirebaseUser> user = new Auth().signIn(email, password);
-    new Timer(new Duration(milliseconds: 2), () {
 
-      user.then((value) { useValue(value); },
-          onError: (e) { handleError(e); });
-    });
+     //auth.then((user) => userId = user.uid);
+     debugPrint("inside log in function _performLogin: " + x.uid);
 
-
-    //auth.then((user) => userId = user.uid);
-    debugPrint("inside log in function _performLogin: " + x.uid);*/
-    
-    //Navigator.push(context, MaterialPageRoute(builder: (context)=> Home_screen()));
+     Navigator.push(
+         context, MaterialPageRoute(builder: (context) => Home_screen()));
   }
 
   _verticalD() => Container(

@@ -1,19 +1,13 @@
 import 'package:basketapp/help_screen.dart';
-import 'package:basketapp/item_screen.dart';
 import 'package:basketapp/logind_signup.dart';
 import 'package:basketapp/orderhistory_screen.dart';
 import 'package:basketapp/setting_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Navigation_Drawer extends StatelessWidget{
-
-
-  String name ='My Wishlist';
-  Widget build(BuildContext context){
-    Future<FirebaseUser> authUser = FirebaseAuth.instance.currentUser();
-    //authUser.
-    return new Drawer(
+class Custom_Drawer {
+  Widget getDrawer(BuildContext context) {
+    String name = "Custom Drawer";
+    return Drawer(
       child: new ListView(
         children: <Widget>[
           new Card(
@@ -25,12 +19,11 @@ class Navigation_Drawer extends StatelessWidget{
                     context,
                     MaterialPageRoute(
                         //builder: (context) => Account_Screen()
-                    ));
+                        ));
               },
               decoration: new BoxDecoration(
                 backgroundBlendMode: BlendMode.difference,
                 color: Colors.white30,
-
                 image: new DecorationImage(
                   image: new ExactAssetImage('assets/images/veg.jpg'),
                   fit: BoxFit.cover,
@@ -55,11 +48,13 @@ class Navigation_Drawer extends StatelessWidget{
                 new ListTile(
                     leading: Icon(Icons.history),
                     title: new Text("Order History "),
-
-
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Oder_History(toolbarname: ' Order History',)));
-
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Oder_History(
+                                    toolbarname: ' Order History',
+                                  )));
                     }),
               ],
             ),
@@ -72,16 +67,24 @@ class Navigation_Drawer extends StatelessWidget{
                     leading: Icon(Icons.settings),
                     title: new Text("Setting"),
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Setting_Screen(toolbarname: 'Setting',)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Setting_Screen(
+                                    toolbarname: 'Setting',
+                                  )));
                     }),
                 new Divider(),
                 new ListTile(
                     leading: Icon(Icons.help),
                     title: new Text("Help"),
                     onTap: () {
-
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Help_Screen(toolbarname: 'Help',)));
-
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Help_Screen(
+                                    toolbarname: 'Help',
+                                  )));
                     }),
               ],
             ),
@@ -92,19 +95,15 @@ class Navigation_Drawer extends StatelessWidget{
                 leading: Icon(Icons.power_settings_new),
                 title: new Text(
                   "Logout",
-                  style:
-                  new TextStyle(color: Colors.redAccent, fontSize: 17.0),
+                  style: new TextStyle(color: Colors.redAccent, fontSize: 17.0),
                 ),
                 onTap: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context) => Login_Screen()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Login_Screen()));
                 }),
           )
         ],
       ),
     );
-
-    /*return Drawer(
-        child:Text("Hello Navigation"),
-    );*/
   }
 }

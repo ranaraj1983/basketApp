@@ -1,14 +1,11 @@
-import 'package:basketapp/Cart_Screen.dart';
-import 'package:basketapp/checkout_screen.dart';
-import 'package:basketapp/model/Address_model.dart';
 import 'package:basketapp/model/ItemProduct.dart';
-import 'package:basketapp/services/Cart.dart';
+import 'package:basketapp/widget/Custom_AppBar.dart';
+import 'package:basketapp/widget/Custom_Drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
-import 'package:provider/provider.dart';
 
 class Item_Details extends StatefulWidget {
   //Item_Details(data);
@@ -26,17 +23,41 @@ class item_details extends State<Item_Details> {
   String toolbarname;
   DocumentSnapshot dataSource;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  List<ItemProduct> list = [];
 
-  //String itemname = 'Apple';
+  int quantity = 0;
   int item = 0;
-  //String itemprice= '\$15';
-  item_details(this.toolbarname,this.dataSource);
-  ObservableList<ItemProduct> addtoCartList = new ObservableList<ItemProduct>();
+
+  item_details(this.toolbarname, this.dataSource);
+
 
   @override
   Widget build(BuildContext context) {
-    final cart = Cart(addtoCartList);
+    String itemId = this.dataSource.data['itemId'];
+
+
+    void minus() {
+      setState(() {
+        if (quantity != 0)
+          quantity--;
+      });
+    }
+
+    void add() {
+      setState(() {
+        quantity++;
+        print(quantity);
+      });
+      print(quantity);
+    }
+    print(quantity);
+    /* cartCounter.itemCounter.value;
+
+    cartCounter.cartList.forEach((element) {
+      if(element.itemId == itemId)
+        quantity = int.parse(element.quantity);
+
+    });*/
+    //final cart = Cart(addtoCartList);
     //print(this.dataSource.data['itemId']);
     // TODO: implement build
     final ThemeData theme = Theme.of(context);
@@ -44,7 +65,9 @@ class item_details extends State<Item_Details> {
     theme.textTheme.headline5.copyWith(color: Colors.white);
     final TextStyle descriptionStyle = theme.textTheme.subhead;
     IconData _backIcon() {
-      switch (Theme.of(context).platform) {
+      switch (Theme
+          .of(context)
+          .platform) {
         case TargetPlatform.android:
         case TargetPlatform.fuchsia:
           return Icons.arrow_back;
@@ -77,103 +100,21 @@ class item_details extends State<Item_Details> {
       assert(false);
       return null;
     }
-    int listSize =0;
-    if(cart.getCartList() !=null)
-      listSize = 0;
-    else
-      listSize = -1;
 
     return new Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(_backIcon()),
-            alignment: Alignment.centerLeft,
-            tooltip: 'Back',
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text(toolbarname),
-          backgroundColor: Colors.white,
-          actions: <Widget>[
-            new Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: new Container(
-                height: 150.0,
-                width: 30.0,
-                child: new GestureDetector(
-                  onTap: () {
-                    /*Navigator.of(context).push(
-                  new MaterialPageRoute(
-                      builder:(BuildContext context) =>
-                      new CartItemsScreen()
-                  )
-              );*/
-                  },
-                  child: Stack(
-                    children: <Widget>[
-                      new IconButton(
-                          icon: new Icon(
-                            Icons.shopping_cart,
-                            color: Colors.black,
-                          ),
-                          onPressed: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) =>Checkout()));
-                          }),
-
-                      listSize <= 0
-                          ? new Container()
-                          : new Positioned(
-                              child: new Stack(
-                              children: <Widget>[
-                                new Icon(Icons.brightness_1,
-                                    size: 20.0, color: Colors.orange.shade500),
-                                new Positioned(
-
-                                    top: 4.0,
-                                    right: 5.5,
-                                    child: new Center(
-                                      child: new Text(
-                                        "test",
-                                        //Cart(addtoCartList).getCartList().length.toString(),
-                                        style: new TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 11.0,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    )),
-                                new Column(
-                                  children: <Widget>[
-                                    Text("Counter"),
-                                    Observer(
-                                      builder: (_) => Text(
-                                        '${cart.counter.value}'
-                                      ),
-
-                                    ),
-
-                                  ],
-                                ),
-                              ],
-                            )),
-                    ],
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
+        drawer: Custom_Drawer().getDrawer(context),
+        appBar: Custom_AppBar().getAppBar(context),
         body: Container(
             padding: const EdgeInsets.all(8.0),
 
-            child:SingleChildScrollView(
+            child: SingleChildScrollView(
 
-              child: Column(
-              children: <Widget>[
+                child: Column(
+                    children: <Widget>[
 
-             Card(
-               elevation: 4.0,
+                      Card(
+                        elevation: 4.0,
               child:Container(
                 color: Colors.white,
                 child: Column(
@@ -254,38 +195,42 @@ class item_details extends State<Item_Details> {
                                   Row(
                                     children: <Widget>[
                                       new IconButton(
-                                        icon: Icon(_add_icon(),color: Colors.amber.shade500),
-                                        onPressed: () {
-                                          AlertDialog(
-                                              title: Text("test"),
-                                              content: Text("test")
-                                          );
-                                            item = item + 1;
+                                          icon: Icon(_add_icon(),
+                                              color: Colors.amber.shade500),
+                                          onPressed: () => add()
 
-                                        },
                                       ),
+
+                                      /* new FloatingActionButton(
+                                        onPressed: add,
+                                        child: new Icon(Icons.add, color: Colors.black,),
+                                        backgroundColor: Colors.white,),*/
                                       Container(
-                                        margin: EdgeInsets.only(left:2.0),
+                                        margin: EdgeInsets.only(left: 2.0),
                                       ),
-                                      Text(
-                                        item.toString(),
-                                        style: descriptionStyle.copyWith(
-                                            fontSize: 20.0,
-                                            color: Colors.black87),
-                                      ),
+                                      /*Observer(
+                                        builder: (_) => Text(
+                                          "${cartCounter.itemCounter.value}",
+                                          style: TextStyle(fontSize: 30),
+                                        ),
+                                      ),*/
+                                      //print(quantity);
+                                      Text("$quantity"),
                                       Container(
-                                        margin: EdgeInsets.only(right:2.0),
+                                        margin: EdgeInsets.only(right: 2.0),
                                       ),
                                       new IconButton(
-                                        icon: Icon(_sub_icon(),color: Colors.amber.shade500),
-                                        onPressed: () {
-                                          if(item<0){
+                                          icon: Icon(_sub_icon(),
+                                              color: Colors.amber.shade500),
+                                          onPressed: () => minus() /*{
+                                          if(quantity<0){
 
                                           }
                                           else{
-                                            item = item -1;
+                                            quantity = quantity -1;
+                                            print(quantity);
                                           }
-                                        },
+                                        },*/
                                       ),
                                     ],
                                   ),
@@ -300,15 +245,22 @@ class item_details extends State<Item_Details> {
                                           textColor: Colors.amber.shade500,
                                           onPressed: () {
                                             debugPrint("test add funtion");
-                                            cart.increment();
-                                            cart.addItemToCartList(
-                                                new ItemProduct(
-                                                    itemId:this.dataSource.data['itemId'],
-                                                    name: this.dataSource.data['itemName'],
-                                                    imageUrl:this.dataSource.data['imageUrl'],
-                                                    price:this.dataSource.data['price'],
-                                                    quantity: this.item.toString()
-                                                )
+                                            //cart.increment();
+                                            if (quantity <= 0)
+                                              quantity = 1;
+                                            Custom_AppBar().addItemToCart(
+                                                this.dataSource.data['itemId'],
+                                                this.dataSource
+                                                    .data['itemName'],
+                                                this.dataSource
+                                                    .data['imageUrl'],
+                                                this.dataSource
+                                                    .data['description'],
+                                                quantity.toString(),
+                                                (int.parse(this.dataSource
+                                                    .data['price']) * quantity)
+                                                    .toString()
+
                                             );
                                             //cart.increment();
                                             /*Cart(this.addtoCartList).addItemToCartList(
@@ -370,14 +322,21 @@ class item_details extends State<Item_Details> {
 
                           child: Text("Grocery stores also offer non-perishable foods that are packaged in bottles, boxes, and cans; some also have bakeries, butchers, delis, and fresh produce. Large grocery stores that stock significant amounts of non-food products, such as clothing and household items, are called supermarkets. Some large supermarkets also include a pharmacy, and customer service, redemption, and electronics sections.",
                             maxLines: 10,
-                            style: TextStyle(fontSize: 13.0,color: Colors.black38)
+                              style: TextStyle(
+                                  fontSize: 13.0, color: Colors.black38)
                           )
              ),
 
-    ]
-    )
-    )
+                    ]
+                )
+            )
         )
     );
   }
+
+  void increaseItemNumber(int quantity) {
+    quantity ++;
+  }
+
+
 }

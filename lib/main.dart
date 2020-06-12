@@ -1,13 +1,9 @@
-import 'package:basketapp/Cart_Screen.dart';
 import 'package:basketapp/HomeScreen.dart';
-import 'package:basketapp/item_screen.dart';
 import 'package:basketapp/model/ItemProduct.dart';
-import 'package:basketapp/services/Cart.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'dart:async';
 
-import 'package:provider/provider.dart';
 
 
 void main() => runApp(new MyApp());
@@ -17,35 +13,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    //final cart = Provider.of<Cart>(context, listen: false);
 
-    return MaterialApp(
+
+    return new MaterialApp(
       theme: new ThemeData(
-
           primaryColor: Colors.white,
           primaryColorDark: Colors.white30,
-          accentColor: Colors.blue
-
-      ),
-      home: Provider<Cart>(
-        create: (context) =>  Cart(addtoCartList),
-        child: new Item_Screen(),
-        //dispose: (_,cart) => cart.dispose(),
-      ),
+          accentColor: Colors.blue),
+      //home: new Item_Screen(),
+      home: new MyHomePage(title: 'Groceries'),
     );
-
-
-    /*return new MaterialApp(
-        theme: new ThemeData(
-
-            primaryColor: Colors.white,
-            primaryColorDark: Colors.white30,
-            accentColor: Colors.blue
-
-        ),
-        home: new Item_Screen(),
-      //home: new MyHomePage(title: 'Groceries'),
-    );*/
   }
 }
 

@@ -1,5 +1,8 @@
 import 'package:basketapp/Payment_Screen.dart';
+import 'package:basketapp/widget/Custom_AppBar.dart';
+import 'package:basketapp/widget/Custom_Drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 class Checkout extends StatefulWidget {
   @override
@@ -40,6 +43,7 @@ class check_out extends State<Checkout> {
     Item(itemName: 'Lemon', itemQun: 'Qty:2', itemPrice: '\₹ 70'),
     Item(itemName: 'Apple', itemQun: 'Qty:1', itemPrice: '\₹ 50'),
   ];
+
   String toolbarname = 'CheckOut';
 
   @override
@@ -47,6 +51,7 @@ class check_out extends State<Checkout> {
     // TODO: implement build
 
     final double height = MediaQuery.of(context).size.height;
+    int totalPrice = Custom_AppBar().getCartTotalPrice();
 
     AppBar appBar = AppBar(
       leading: IconButton(
@@ -82,7 +87,8 @@ class check_out extends State<Checkout> {
 
     return new Scaffold(
       key: _scaffoldKey,
-      appBar: appBar,
+      drawer: Custom_Drawer().getDrawer(context),
+      appBar: Custom_AppBar().getAppBar(context),
       body: new Column(
         children: <Widget>[
           Container(
@@ -465,7 +471,7 @@ class check_out extends State<Checkout> {
           new Container(
             alignment: Alignment.topLeft,
             margin:
-                EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
+            EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
             child: new Text(
               'Order Summary',
               style: TextStyle(
@@ -474,49 +480,15 @@ class check_out extends State<Checkout> {
                   fontSize: 18.0),
             ),
           ),
-          Container(
-              margin: EdgeInsets.only(
-                  left: 12.0, top: 5.0, right: 12.0, bottom: 5.0),
-              height: 170.0,
-              child: ListView.builder(
-                  itemCount: itemList.length,
-                  itemBuilder: (BuildContext cont, int ind) {
-                    return SafeArea(
-                        child: Column(
-                      children: <Widget>[
-                        Divider(height: 15.0),
-                        Container(
-                          padding: EdgeInsets.all(5.0),
-                          child: Row(
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Observer(
+                  builder: (_) => Custom_AppBar().getCartListWidgetListView()
+              ),
+            ],
+          ),
 
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-
-                                    Text(itemList[ind].itemName,
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.black87,
-                                            fontWeight: FontWeight.bold)),
-                                    Text(itemList[ind].itemQun,
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.black87,
-                                            fontWeight: FontWeight.bold)),
-                                    Text(itemList[ind].itemPrice,
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.black87,
-                                            fontWeight: FontWeight.bold)),
-                                  ],
-
-                          ),
-                        ),
-                      ],
-                    ));
-                  })),
           Container(
               alignment: Alignment.bottomLeft,
               height: 50.0,
@@ -534,7 +506,7 @@ class check_out extends State<Checkout> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '\₹ 524',
+                      '\₹ ${totalPrice}',
                       style: TextStyle(fontSize: 17.0, color: Colors.black54),
                     ),
                     Padding(

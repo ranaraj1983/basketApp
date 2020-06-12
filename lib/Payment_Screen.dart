@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/item_details.dart';
 import 'package:basketapp/item_screen.dart';
@@ -97,7 +99,7 @@ class payment extends State<Patment> {
       appBar: appBar,
       body: new Column(
         children: <Widget>[
-          Container(
+          /*Container(
               margin: EdgeInsets.all(5.0),
               child: Card(
                   child: Container(
@@ -157,7 +159,7 @@ class payment extends State<Patment> {
                             ],
                           ),
                         ],
-                      )))),
+                      )))),*/
           _verticalDivider(),
           Container(
               margin: EdgeInsets.all(10.0),
@@ -214,7 +216,7 @@ class payment extends State<Patment> {
                           ),
                           Divider(),
                           _verticalD(),
-                          Container(
+                          /*Container(
                               padding: EdgeInsets.only(left: 10.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
@@ -229,10 +231,10 @@ class payment extends State<Patment> {
                                       groupValue: radioValue,
                                       onChanged: null),
                                 ],
-                              )),
-                          Divider(),
+                              )),*/
+                      Divider(),
                           _verticalD(),
-                          Container(
+                          /* Container(
                               padding: EdgeInsets.only(left: 10.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
@@ -245,7 +247,7 @@ class payment extends State<Patment> {
                               Radio<int>(
                                   value: 0, groupValue: 0, onChanged: null),
                             ],
-                              )),
+                              )),*/
                           Divider(),
                           _verticalD(),
                           Container(
@@ -300,7 +302,15 @@ class payment extends State<Patment> {
                             onPressed: () {
                               DataCollection().addCustomerCartToDatabase(
                                   Custom_AppBar().getCartList());
-                              Custom_AppBar().clearCart();
+                              new Timer(new Duration(seconds: 10), () {
+                                debugPrint("Print after 5 seconds");
+                                DataCollection().getOrderHistoryList();
+                              });
+                              new Timer(new Duration(seconds: 10), () {
+                                debugPrint("Print after 5 seconds");
+                                Custom_AppBar().clearCart();
+                              });
+
                               //Order_Service().placeOrder();
                               //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen("")));
                             },

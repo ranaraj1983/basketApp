@@ -1,4 +1,5 @@
 import 'package:basketapp/Cart_Screen.dart';
+import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/help_screen.dart';
 import 'package:basketapp/item_screen.dart';
 import 'package:basketapp/logind_signup.dart';
@@ -13,6 +14,8 @@ import 'Account_screen.dart';
 const String _kGalleryAssetsPackage = 'flutter_gallery_assets';
 
 class Home_screen extends StatefulWidget {
+  //final Auth auth;
+
   @override
   State<StatefulWidget> createState() => new home();
 // TODO: implement createState
@@ -146,7 +149,7 @@ class home extends State<Home_screen> {
                                     ),
                                   )),
                             ],
-                          )),
+                            )),
                   ],
                 ),
               ),
@@ -154,7 +157,7 @@ class home extends State<Home_screen> {
           )
         ],
       ),
-      drawer: Navigation_Drawer(),
+      drawer: Navigation_Drawer(new Auth()),
       body: new SingleChildScrollView(
         child: Container(
           child: new Column(children: <Widget>[

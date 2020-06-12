@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:basketapp/model/Order.dart';
 import 'package:basketapp/model/User.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 
 abstract class BaseAuth {
   Future<FirebaseUser>  signIn(String email, String password);
@@ -46,8 +48,15 @@ class Auth implements BaseAuth {
     //print("this is my user value: " + val.email);
   }
 
+  Future<FirebaseUser> getCurrentUserFuture() async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    return user != null ? user : null;
+    //return await _firebaseAuth.currentUser();
+  }
+
   Future<String> getCurrentUserId() async {
     FirebaseUser user = await _firebaseAuth.currentUser();
+    debugPrint("user :" + user.toString());
     return user.uid;
     //return await _firebaseAuth.currentUser();
   }
@@ -71,6 +80,8 @@ class Auth implements BaseAuth {
 
     return user.uid;
   }
+
+  List<Order> getOrderList() {}
 
   Future<FirebaseUser> getCurrentUser() async {
     FirebaseUser user = await _firebaseAuth.currentUser();

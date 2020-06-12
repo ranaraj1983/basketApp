@@ -1,20 +1,20 @@
 import 'package:basketapp/HomeScreen.dart';
-import 'package:basketapp/model/ItemProduct.dart';
+
+//import 'package:basketapp/model/ItemProduct.dart';
+import 'package:basketapp/model/Product_Item.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'dart:async';
 
-
-
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
-  ObservableList<ItemProduct> addtoCartList = new ObservableList<ItemProduct>();
+  ObservableList<Product_Item> addtoCartList =
+      new ObservableList<Product_Item>();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-
     return new MaterialApp(
       theme: new ThemeData(
           primaryColor: Colors.white,

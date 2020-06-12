@@ -1,4 +1,4 @@
-import 'package:basketapp/widget/Cart_List.dart';
+import 'package:basketapp/model/Product_Item.dart';
 import 'package:mobx/mobx.dart';
 
 part 'Cart_Counter.g.dart';
@@ -10,10 +10,10 @@ abstract class _Cart_Counter with Store {
   Observable itemCounter = Observable(0);
 
   @observable
-  Observable list = Observable(new List<Cart_Order>());
+  Observable list = Observable(new List<Product_Item>());
 
   @observable
-  ObservableList<Cart_Order> cartList = ObservableList<Cart_Order>();
+  ObservableList<Product_Item> cartList = ObservableList<Product_Item>();
 
   //String x = Observable("Test");
 
@@ -32,8 +32,8 @@ abstract class _Cart_Counter with Store {
   @action
   void addCartItemToBusket(String itemId, String itemName, String imageUrl,
       String description, String quantity, String price) {
-    final cart =
-        Cart_Order(itemId, itemName, imageUrl, description, quantity, price);
+    final cart = Product_Item(itemId, itemName, imageUrl, description, quantity,
+        price, null, null, null, null, null);
     cartList.add(cart);
     //list.value
   }

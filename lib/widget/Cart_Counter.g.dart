@@ -42,13 +42,13 @@ mixin _$Cart_Counter on _Cart_Counter, Store {
   final _$cartListAtom = Atom(name: '_Cart_Counter.cartList');
 
   @override
-  ObservableList<Cart_Order> get cartList {
+  ObservableList<Product_Item> get cartList {
     _$cartListAtom.reportRead();
     return super.cartList;
   }
 
   @override
-  set cartList(ObservableList<Cart_Order> value) {
+  set cartList(ObservableList<Product_Item> value) {
     _$cartListAtom.reportWrite(value, super.cartList, () {
       super.cartList = value;
     });

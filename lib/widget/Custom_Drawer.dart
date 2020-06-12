@@ -1,18 +1,44 @@
+import 'dart:async';
+
+import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/help_screen.dart';
 import 'package:basketapp/logind_signup.dart';
 import 'package:basketapp/orderhistory_screen.dart';
 import 'package:basketapp/setting_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Custom_Drawer {
+  String photoUrl;
+  String uid;
+  String dispalyName;
+  String phoneNumber;
+  String email;
+
+  Future<String> checkLoginUser() async {
+    //String userId =  Auth().getCurrentUserId() ;
+
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    new Timer(new Duration(milliseconds: 5), () {
+      photoUrl = user.photoUrl;
+      uid = user.uid;
+      phoneNumber = user.phoneNumber;
+      dispalyName = user.displayName;
+      email = user.email;
+    });
+
+    return null;
+  }
+
   Widget getDrawer(BuildContext context) {
     String name = "Custom Drawer";
+    Future<FirebaseUser> user = FirebaseAuth.instance.currentUser();
     return Drawer(
       child: new ListView(
         children: <Widget>[
           new Card(
             child: UserAccountsDrawerHeader(
-              accountName: new Text("Bappaditya Khan"),
+              accountName: new Text("${user}"),
               accountEmail: new Text("NaomiASchultz@armyspy.com"),
               onDetailsPressed: () {
                 Navigator.push(
@@ -53,8 +79,8 @@ class Custom_Drawer {
                           context,
                           MaterialPageRoute(
                               builder: (context) => Oder_History(
-                                    toolbarname: ' Order History',
-                                  )));
+                                toolbarname: ' Order History',
+                              )));
                     }),
               ],
             ),
@@ -71,8 +97,8 @@ class Custom_Drawer {
                           context,
                           MaterialPageRoute(
                               builder: (context) => Setting_Screen(
-                                    toolbarname: 'Setting',
-                                  )));
+                                toolbarname: 'Setting',
+                              )));
                     }),
                 new Divider(),
                 new ListTile(
@@ -83,8 +109,8 @@ class Custom_Drawer {
                           context,
                           MaterialPageRoute(
                               builder: (context) => Help_Screen(
-                                    toolbarname: 'Help',
-                                  )));
+                                toolbarname: 'Help',
+                              )));
                     }),
               ],
             ),

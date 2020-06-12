@@ -306,14 +306,13 @@ class login extends State<Login_Screen> {
    void performLogin (email, password) async {
      //_getItem();
      Future<FirebaseUser> user = new Auth().signIn(email, password);
-     new Timer(new Duration(milliseconds: 2), () {
-       user.then((value) {
-         useValue(value);
-       },
-           onError: (e) {
-             handleError(e);
-           });
-     });
+     new Timer(new Duration(milliseconds: 10), () {
+      user.then((value) {
+        useValue(value);
+      }, onError: (e) {
+        handleError(e);
+      });
+    });
 
 
      //auth.then((user) => userId = user.uid);

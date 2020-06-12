@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 //import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:basketapp/widget/Cart_Counter.dart';
-import 'package:basketapp/widget/Cart_List.dart';
+import 'package:basketapp/model/Product_Item.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 
@@ -25,7 +25,7 @@ class Custom_AppBar {
     return price;
   }
 
-  ObservableList<Cart_Order> getCartList() {
+  ObservableList<Product_Item> getCartList() {
     return cartCounter.cartList;
   }
 
@@ -83,7 +83,7 @@ class Custom_AppBar {
 
   Widget getAppBar(BuildContext context) {
     return AppBar(
-      title: Text("Go Modi"),
+      title: Text("Go Mudi"),
       backgroundColor: Colors.yellowAccent,
       actions: <Widget>[
         IconButton(

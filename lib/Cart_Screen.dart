@@ -1,6 +1,8 @@
 import 'package:basketapp/checkout_screen.dart';
 import 'package:basketapp/item_screen.dart';
-import 'package:basketapp/model/ItemProduct.dart';
+import 'package:basketapp/model/Product_Item.dart';
+
+//import 'package:basketapp/model/ItemProduct.dart';
 import 'package:flutter/material.dart';
 
 enum DialogDemoAction {
@@ -9,10 +11,12 @@ enum DialogDemoAction {
   disagree,
   agree,
 }
-class Cart_screen extends StatefulWidget {
-  List<ItemProduct> list;
 
-  Cart_screen( {Key key, this.list }) : super(key: key);
+class Cart_screen extends StatefulWidget {
+  List<Product_Item> list;
+
+  Cart_screen({Key key, this.list}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => Cart_Product_Item(list);
 }
@@ -27,9 +31,11 @@ class Cart_screen extends StatefulWidget {
 }*/
 
 class Cart_Product_Item extends State<Cart_screen> {
-  List<ItemProduct> itemList;
+  List<Product_Item> itemList;
+
   Cart_Product_Item(this.itemList);
- /* List<Item> itemList = <Item>[
+
+  /* List<Item> itemList = <Item>[
     Item(
         itemImage: 'images/grapes.jpg',
         itemName: 'Black Grape',
@@ -306,7 +312,7 @@ class Cart_Product_Item extends State<Cart_screen> {
                                                           children: <Widget>[
                                                             Text(
                                                               itemList[ind]
-                                                                  .name,
+                                                                  .itemName,
                                                               style: TextStyle(
                                                                   fontWeight:
                                                                   FontWeight

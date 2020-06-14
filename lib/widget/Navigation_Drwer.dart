@@ -1,4 +1,5 @@
 import 'package:basketapp/HomeScreen.dart';
+import 'package:basketapp/admin/AdminConsole.dart';
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/help_screen.dart';
 import 'package:basketapp/logind_signup.dart';
@@ -76,6 +77,8 @@ class _Navigation_Drawer extends State<Navigation_Drawer> {
           new Divider(),
           _getNavBarListWidget("Logout", Icons.local_grocery_store),
           new Divider(),
+          _getNavBarListWidget("Admin", Icons.local_grocery_store),
+          new Divider(),
         ],
       ),
     );
@@ -116,7 +119,9 @@ class _Navigation_Drawer extends State<Navigation_Drawer> {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => Home_screen()));
             } else if (text == "Dashboard") {
-            } else if (text == "") {
+            } else if (text == "Admin") {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AdminConsole()));
             } else if (text == "") {
             } else if (text == "") {
             } else if (text == "") {

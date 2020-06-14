@@ -1,12 +1,7 @@
 import 'dart:async';
-
-import 'dart:convert';
 import 'dart:math';
 import 'package:basketapp/database/Auth.dart';
-import 'package:basketapp/model/Category.dart';
 import 'package:basketapp/model/Order.dart';
-
-//import 'package:basketapp/model/ItemProduct.dart';
 import 'package:basketapp/model/Product_Item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -137,10 +132,26 @@ class DataCollection {
       return m = Image.network(
         value.toString(),
         fit: BoxFit.scaleDown,
-
       );
     });
   }
 
+  void addCategoryToDB(
+      String categoryName, String categoryId, String categoryImageUrl) async {
+    try {
+      print("inside add category");
 
+      await firestoreInstance
+          .collection("categories")
+          .document(categoryName)
+          .setData({
+        'categoryId': categoryId,
+        'categoryName': categoryName,
+        'categoryImageUrl': categoryImageUrl
+      });
+      print("inside add category 2");
+    } catch (er) {
+      print(er);
+    }
+  }
 }

@@ -2,7 +2,7 @@ import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/item_details.dart';
 import 'package:basketapp/model/Address_model.dart';
-import 'package:basketapp/services/Navigation_Drwer.dart';
+import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Custom_Drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

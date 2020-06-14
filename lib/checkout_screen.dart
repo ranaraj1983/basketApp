@@ -471,7 +471,7 @@ class check_out extends State<Checkout> {
           new Container(
             alignment: Alignment.topLeft,
             margin:
-            EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
+                EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
             child: new Text(
               'Order Summary',
               style: TextStyle(
@@ -480,15 +480,15 @@ class check_out extends State<Checkout> {
                   fontSize: 18.0),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Observer(
-                  builder: (_) => Custom_AppBar().getCartListWidgetListView()
-              ),
-            ],
+          SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Observer(
+                    builder: (_) =>
+                        Custom_AppBar().getCartListWidgetListView()),
+              ],
+            ),
           ),
-
           Container(
               alignment: Alignment.bottomLeft,
               height: 50.0,

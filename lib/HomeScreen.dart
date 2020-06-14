@@ -1,5 +1,6 @@
 import 'package:basketapp/Cart_Screen.dart';
 import 'package:basketapp/database/Auth.dart';
+import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/help_screen.dart';
 import 'package:basketapp/item_screen.dart';
 import 'package:basketapp/logind_signup.dart';
@@ -74,7 +75,6 @@ class home extends State<Home_screen> {
     ),
   ];
 
-  final List<String> items = ['Balbhadra', 'Maulik', 'Roshi'];
   static const double height = 366.0;
   String name ='My Wishlist';
   @override
@@ -253,18 +253,7 @@ class home extends State<Home_screen> {
                             ),
                           )
 
-                          /*Positioned(
-                          bottom: 16.0,
-                          left: 16.0,
-                          right: 16.0,
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: Text('',
-                              style: titleStyle,
-                            ),
-                          ),
-                        ),*/
+
                         ],
                       ),
                     ),
@@ -297,18 +286,7 @@ class home extends State<Home_screen> {
                             ),
                           )
 
-                          /*Positioned(
-                          bottom: 16.0,
-                          left: 16.0,
-                          right: 16.0,
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: Text('',
-                              style: titleStyle,
-                            ),
-                          ),
-                        ),*/
+
                         ],
                       ),
                     ),
@@ -341,18 +319,7 @@ class home extends State<Home_screen> {
                             ),
                           )
 
-                          /*Positioned(
-                          bottom: 16.0,
-                          left: 16.0,
-                          right: 16.0,
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: Text('',
-                              style: titleStyle,
-                            ),
-                          ),
-                        ),*/
+
                         ],
                       ),
                     ),
@@ -385,18 +352,7 @@ class home extends State<Home_screen> {
                             ),
                           )
 
-                          /*Positioned(
-                          bottom: 16.0,
-                          left: 16.0,
-                          right: 16.0,
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: Text('',
-                              style: titleStyle,
-                            ),
-                          ),
-                        ),*/
+
                         ],
                       ),
                     ),
@@ -439,6 +395,7 @@ class home extends State<Home_screen> {
                       ),
                     ),
                     _verticalD(),
+
                     new Row(
                       children: <Widget>[
                         new GestureDetector(
@@ -461,7 +418,69 @@ class home extends State<Home_screen> {
               alignment: Alignment.topCenter,
               height: 700.0,
 
-              child: new GridView.builder(
+              child: FutureBuilder(
+                  future: DataCollection().getCategoryList(),
+                  builder: (_, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: Text("Loading...."),
+                      );
+                    } else {
+                      return GridView.builder(
+                          primary: false,
+                          physics: NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.all(10.0),
+                          gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2),
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            var d = snapshot.data;
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) =>
+                                        Item_Screen(
+                                            d[index].data['categoryName'])));
+                              },
+                              child: Column(
+                                children: <Widget>[
+                                  FutureBuilder(
+                                    future: DataCollection()
+                                        .getImageFromStorage(context,
+                                        d[index].data['categoryImageUrl']),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.done) {
+                                        return Container(
+                                          child: snapshot.data,
+                                        );
+                                      }
+
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Container(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+
+                                      return Container();
+                                    },
+
+                                  ),
+                                  Text(d[index].data['categoryName']),
+                                  //Image.network(d[index].data['categoryImageUrl']),
+
+                                ],
+                              ),
+
+
+                            );
+                          }
+                      );
+                    }
+                  }
+              ),
+              /* new GridView.builder(
                   itemCount: photos.length,
                   primary: false,
                   physics: NeverScrollableScrollPhysics(),
@@ -517,17 +536,7 @@ class home extends State<Home_screen> {
                                             ),
                                           ),
 
-                                          /*Positioned(
-                                    child: FittedBox(
 
-                                     fit: BoxFit.fill,
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(photos[index].title,
-                                        style: TextStyle(color: Colors.black87,fontSize: 15.0),
-                                      ),
-
-                                  )
-                                  )*/
                                         ],
                                       ),
                                     ),
@@ -540,7 +549,7 @@ class home extends State<Home_screen> {
                         )
 
                     );
-                  }),
+                  }),*/
             )
           ]),
         ),
@@ -548,17 +557,7 @@ class home extends State<Home_screen> {
     );
   }
 
-/*
-  new Container(
-  alignment: Alignment.topCenter,
-  child: GridView.count(
-  primary: true,
-  crossAxisCount: 2,
-  childAspectRatio: 0.80,
-  children: List.generate(photos.length, (index) {
-  return getStructuredGridCell(photos[index]);
-  }),
-  ))*/
+
   Icon keyloch = new Icon(
     Icons.arrow_forward,
     color: Colors.black26,

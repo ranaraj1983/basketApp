@@ -124,6 +124,7 @@ class Custom_Drawer {
                   style: new TextStyle(color: Colors.redAccent, fontSize: 17.0),
                 ),
                 onTap: () {
+                  Auth().signOut();
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => Login_Screen()));
                 }),

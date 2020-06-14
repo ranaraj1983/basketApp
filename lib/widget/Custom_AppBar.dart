@@ -31,17 +31,22 @@ class Custom_AppBar {
 
   Widget getCartListWidgetListView() {
     return ListView.builder(
-        shrinkWrap: true,
-        padding: const EdgeInsets.all(8),
         itemCount: cartCounter.cartList.length,
         itemBuilder: (BuildContext context, int index) {
-          return SafeArea(
+          return SingleChildScrollView(
+            //height: MediaQuery.of(context).size.height,
             child: Column(
+
               children: <Widget>[
                 Divider(height: 15.0),
                 Container(
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height,
                   padding: EdgeInsets.all(5.0),
                   child: Row(
+
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,9 +66,26 @@ class Custom_AppBar {
                               fontSize: 16.0,
                               color: Colors.black87,
                               fontWeight: FontWeight.bold)),
+                      FlatButton(
+                        color: Colors.blue,
+                        textColor: Colors.white,
+                        disabledColor: Colors.grey,
+                        disabledTextColor: Colors.black,
+                        padding: EdgeInsets.all(8.0),
+                        splashColor: Colors.blueAccent,
+                        onPressed: () {
+                          Custom_AppBar().removeItemFromCart(cartCounter
+                              .cartList[index].itemId);
+                        },
+                        child: Text(
+                          "Cancel",
+                        ),
+                      )
                     ],
                   ),
+
                 ),
+                Divider(height: 15.0),
               ],
             ),
           );

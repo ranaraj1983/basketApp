@@ -1,5 +1,8 @@
+import 'package:basketapp/database/Auth.dart';
+import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/item_details.dart';
 import 'package:basketapp/model/Address_model.dart';
+import 'package:basketapp/services/Navigation_Drwer.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Custom_Drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,30 +10,24 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 class Item_Screen extends StatefulWidget {
-  String toolbarname;
+  String categoryName;
 
-  Item_Screen(this.toolbarname);
+  Item_Screen(this.categoryName);
 
   @override
-  _itemPageState createState() => _itemPageState(toolbarname);
+  _itemPageState createState() => _itemPageState(categoryName);
 }
 
 class _itemPageState extends State<Item_Screen> {
   _itemPageState(toolbarname);
 
-  Future getCategories() async {
-    var firestore = Firestore.instance;
-    QuerySnapshot qs = await firestore.collection("categories").getDocuments();
-    return qs.documents;
-  }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: Custom_AppBar().getAppBar(context),
-        drawer: Custom_Drawer().getDrawer(context),
+        drawer: Navigation_Drawer(new Auth()),
         body: FutureBuilder(
-            future: getCategories(),
+            future: DataCollection().getCategories(),
             builder: (_, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -43,7 +40,74 @@ class _itemPageState extends State<Item_Screen> {
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2),
                     itemBuilder: (_, index) {
-                      return new Expanded(
+                      return //Text(snapshot.data[index].data['categoryName']);
+                        FutureBuilder(
+                            future: DataCollection().getSubCollection(
+                                snapshot.data[index].documentID),
+                            builder: (_, snp) {
+                              if (snp.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                  child: Text("Loading...."),
+                                );
+                              } else
+                              if (snp.connectionState == ConnectionState.done) {
+                                return GridView.builder(
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2),
+                                    itemCount: snp.data.documents.length,
+                                    itemBuilder: (_, index) {
+                                      return Row(
+                                        children: <Widget>[
+                                          FutureBuilder(
+                                            future: DataCollection()
+                                                .getImageFromStorage(context,
+                                                snp.data.documents[index]
+                                                    .data['imageUrl']),
+                                            builder: (context, st) {
+                                              if (st.connectionState ==
+                                                  ConnectionState.done) {
+                                                return Container(
+                                                  child: st.data,
+                                                );
+                                              }
+
+                                              if (st.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return Container(
+                                                  child: CircularProgressIndicator(),
+                                                );
+                                              }
+
+                                              return Container();
+                                            },
+
+                                          ),
+                                          //DataCollection().getImageFromStorage();
+                                          /*Image.network(
+                                          snp.data.documents[index].data['imageUrl'],
+                                          //snp.data.documents.data[index].data['imageUrl'],
+                                          height: 100,
+                                          width: 100,
+                                          fit: BoxFit.cover,
+                                        ),*/
+
+                                        ],
+                                      );
+                                      //Text(snp.data.documents[0].data['itemName']);
+                                    }
+                                );
+                              }
+                              return Row(
+                                children: <Widget>[
+                                  Text("Something went wrong"),
+                                ],
+                              );
+                            }
+                        );
+                      /*Expanded(
+
+
 
                         child: Container(
 
@@ -54,7 +118,10 @@ class _itemPageState extends State<Item_Screen> {
 
                               Navigator.push(context, MaterialPageRoute(
                                   builder:
-                                      (context)=> Item_Details(toolbarname:snapshot.data[index].data['itemName'],dataSource:snapshot.data[index],)
+                                      (context)=> Item_Details(
+                                        toolbarname:snapshot.data[index].
+                                        data['itemName'],
+                                        dataSource:snapshot.data[index],)
                               )
                               );
                             },
@@ -86,7 +153,7 @@ class _itemPageState extends State<Item_Screen> {
                                       Padding(
                                         padding: const EdgeInsets.only(bottom: 0.0),
                                         child: Text(
-                                          "INR " +
+                                          "\₹ " +
                                               snapshot.data[index].data['price'],
                                         ),
                                       ),
@@ -104,13 +171,12 @@ class _itemPageState extends State<Item_Screen> {
                                                     .data['imageUrl'],
                                                 snapshot.data[index]
                                                     .data['description'],
-                                                snapshot.data[index]
-                                                    .data['quantity'],
+                                                1.toString(),
                                                 snapshot.data[index]
                                                     .data['price']
-                                            ), /*Navigator.push(context,
+                                            ), */ /*Navigator.push(context,
                                             MaterialPageRoute(builder: (context)=>
-                                                Item_Details())),*/
+                                                Item_Details())),*/ /*
                                       )
                                     ],
                                   ),
@@ -123,7 +189,7 @@ class _itemPageState extends State<Item_Screen> {
                           ),
 
                         ),
-                      );
+                      );*/
                     });
               }
             }));

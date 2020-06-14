@@ -304,22 +304,22 @@ class login extends State<Login_Screen> {
       new DataCollection().getDataFromDatabase();
     }
    void performLogin (email, password) async {
-     //_getItem();
-     Future<FirebaseUser> user = new Auth().signIn(email, password);
+    //_getItem();
+    FirebaseUser user = await new Auth().signIn(email, password);
+    /*user.
      new Timer(new Duration(milliseconds: 10), () {
       user.then((value) {
         useValue(value);
       }, onError: (e) {
         handleError(e);
       });
-    });
+    });*/
 
+    //auth.then((user) => userId = user.uid);
+    debugPrint("inside log in function _performLogin: " + user.uid);
 
-     //auth.then((user) => userId = user.uid);
-     debugPrint("inside log in function _performLogin: " + x.uid);
-
-     Navigator.push(
-         context, MaterialPageRoute(builder: (context) => Home_screen()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Home_screen()));
   }
 
   _verticalD() => Container(

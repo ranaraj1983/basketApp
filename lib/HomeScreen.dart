@@ -1,16 +1,10 @@
 import 'package:basketapp/Cart_Screen.dart';
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/database/DataCollection.dart';
-import 'package:basketapp/help_screen.dart';
 import 'package:basketapp/item_screen.dart';
-import 'package:basketapp/logind_signup.dart';
-import 'package:basketapp/orderhistory_screen.dart';
+import 'package:basketapp/widget/Custom_Drawer.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
-import 'package:basketapp/setting_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:loader_search_bar/loader_search_bar.dart';
-import 'package:flutter/foundation.dart';
-import 'Account_screen.dart';
 
 const String _kGalleryAssetsPackage = 'flutter_gallery_assets';
 
@@ -76,7 +70,9 @@ class home extends State<Home_screen> {
   ];
 
   static const double height = 366.0;
-  String name ='My Wishlist';
+  String name = 'My Wishlist';
+  int selectedPosition = 0;
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -87,11 +83,10 @@ class home extends State<Home_screen> {
     final TextStyle descriptionStyle = theme.textTheme.subhead;
     ShapeBorder shapeBorder;
 
-
     return Scaffold(
+      bottomNavigationBar: Custom_Drawer().getButtomNavigation(),
       appBar: new AppBar(
         backgroundColor: Colors.greenAccent,
-
         title: Text("Grocery store"),
         actions: <Widget>[
           IconButton(
@@ -102,7 +97,6 @@ class home extends State<Home_screen> {
                 context: context,
                 //delegate: _delegate,
               );
-
             },
           ),
           new Padding(
@@ -126,30 +120,33 @@ class home extends State<Home_screen> {
                           Icons.add_shopping_cart,
                           color: Colors.black,
                         ),
-                        onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart_screen()));
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Cart_screen()));
                         }),
                     list.length == 0
                         ? new Container()
                         : new Positioned(
-                            child: new Stack(
-                            children: <Widget>[
-                              new Icon(Icons.brightness_1,
-                                  size: 20.0, color: Colors.orange.shade500),
-                              new Positioned(
-                                  top: 4.0,
-                                  right: 5.5,
-                                  child: new Center(
-                                    child: new Text(
-                                      list.length.toString(),
-                                      style: new TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 11.0,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  )),
-                            ],
-                            )),
+                        child: new Stack(
+                          children: <Widget>[
+                            new Icon(Icons.brightness_1,
+                                size: 20.0, color: Colors.orange.shade500),
+                            new Positioned(
+                                top: 4.0,
+                                right: 5.5,
+                                child: new Center(
+                                  child: new Text(
+                                    list.length.toString(),
+                                    style: new TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11.0,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                )),
+                          ],
+                        )),
                   ],
                 ),
               ),
@@ -185,9 +182,11 @@ class home extends State<Home_screen> {
                   _verticalD(),
                   new GestureDetector(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) =>
-                              Item_Screen('Top sellers')));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Item_Screen('Top sellers')));
                     },
                     child: new Text(
                       'Top sellers',
@@ -203,9 +202,11 @@ class home extends State<Home_screen> {
                     children: <Widget>[
                       new GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => Item_Screen('All Product')
-                          ));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      Item_Screen('All Product')));
                         },
                         child: new Text(
                           'All',
@@ -227,7 +228,7 @@ class home extends State<Home_screen> {
               height: 188.0,
               margin: EdgeInsets.only(left: 5.0),
               child:
-                  ListView(scrollDirection: Axis.horizontal, children: <Widget>[
+              ListView(scrollDirection: Axis.horizontal, children: <Widget>[
                 SafeArea(
                   top: true,
                   bottom: true,
@@ -252,8 +253,6 @@ class home extends State<Home_screen> {
                               ],
                             ),
                           )
-
-
                         ],
                       ),
                     ),
@@ -285,8 +284,6 @@ class home extends State<Home_screen> {
                               ],
                             ),
                           )
-
-
                         ],
                       ),
                     ),
@@ -318,8 +315,6 @@ class home extends State<Home_screen> {
                               ],
                             ),
                           )
-
-
                         ],
                       ),
                     ),
@@ -351,8 +346,6 @@ class home extends State<Home_screen> {
                               ],
                             ),
                           )
-
-
                         ],
                       ),
                     ),
@@ -395,7 +388,6 @@ class home extends State<Home_screen> {
                       ),
                     ),
                     _verticalD(),
-
                     new Row(
                       children: <Widget>[
                         new GestureDetector(
@@ -417,7 +409,6 @@ class home extends State<Home_screen> {
             new Container(
               alignment: Alignment.topCenter,
               height: 700.0,
-
               child: FutureBuilder(
                   future: DataCollection().getCategoryList(),
                   builder: (_, AsyncSnapshot snapshot) {
@@ -428,19 +419,23 @@ class home extends State<Home_screen> {
                     } else {
                       return GridView.builder(
                           primary: false,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.all(10.0),
-                          gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                          new SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2),
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
                             var d = snapshot.data;
                             return GestureDetector(
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) =>
-                                        Item_Screen(
-                                            d[index].data['categoryName'])));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            Item_Screen(
+                                                d[index]
+                                                    .data['categoryName'])));
                               },
                               child: Column(
                                 children: <Widget>[
@@ -451,8 +446,27 @@ class home extends State<Home_screen> {
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.done) {
-                                        return Container(
-                                          child: snapshot.data,
+                                        return Column(
+                                          children: <Widget>[
+                                            Card(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                  BorderRadius.all(
+                                                      Radius.circular(
+                                                          10.0))),
+                                              elevation: 10.0,
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0)),
+                                                child: Stack(
+                                                  children: <Widget>[
+                                                    snapshot.data,
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                          //child: snapshot.data,
                                         );
                                       }
 
@@ -465,98 +479,21 @@ class home extends State<Home_screen> {
 
                                       return Container();
                                     },
-
                                   ),
                                   Text(d[index].data['categoryName']),
                                   //Image.network(d[index].data['categoryImageUrl']),
-
                                 ],
                               ),
-
-
                             );
-                          }
-                      );
+                          });
                     }
-                  }
-              ),
-              /* new GridView.builder(
-                  itemCount: photos.length,
-                  primary: false,
-                  physics: NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.all(10.0),
-                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  itemBuilder: (BuildContext context, int index) {
-                    return new GestureDetector(
-                      onTap: (){
-
-                        //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
-                      },
-
-                        child: new Container(
-                            margin: EdgeInsets.all(5.0),
-                            child: new Card(
-                              shape: shapeBorder,
-                              elevation: 3.0,
-                              child: new Container(
-                                //  mainAxisSize: MainAxisSize.max,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 152.0,
-                                      child: Stack(
-                                        children: <Widget>[
-                                          Positioned.fill(
-                                              child: Image.asset(
-                                            photos[index].assetName,
-                                            fit: BoxFit.cover,
-                                          )),
-                                          Container(
-                                            color: Colors.black38,
-                                          ),
-                                          Container(
-                                            //margin: EdgeInsets.only(left: 10.0),
-                                            padding: EdgeInsets.only(
-                                                left: 3.0, bottom: 3.0),
-                                            alignment: Alignment.bottomLeft,
-                                            child: new GestureDetector(
-                                              onTap: () {
-                                                //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen(toolbarname: 'Fruits & Vegetables',)));
-                                              },
-                                              child: new Text(
-                                                photos[index].title,
-                                                style: TextStyle(
-                                                    fontSize: 18.0,
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                          ),
-
-
-                                        ],
-                                      ),
-                                    ),
-
-                                    // new Text(photos[index].title.toString()),
-                                  ],
-                                ),
-                              ),
-                            )
-                        )
-
-                    );
-                  }),*/
+                  }),
             )
           ]),
         ),
       ),
     );
   }
-
 
   Icon keyloch = new Icon(
     Icons.arrow_forward,
@@ -566,6 +503,4 @@ class home extends State<Home_screen> {
   _verticalD() => Container(
         margin: EdgeInsets.only(left: 5.0, right: 0.0, top: 5.0, bottom: 0.0),
       );
-
-
 }

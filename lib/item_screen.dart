@@ -1,13 +1,10 @@
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/item_details.dart';
-import 'package:basketapp/model/Address_model.dart';
-import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Custom_Drawer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 class Item_Screen extends StatefulWidget {
   String categoryName;
@@ -19,14 +16,16 @@ class Item_Screen extends StatefulWidget {
 }
 
 class _itemPageState extends State<Item_Screen> {
-  _itemPageState(toolbarname);
+  _itemPageState(categoryName);
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: Custom_AppBar().getAppBar(context),
-        drawer: Navigation_Drawer(new Auth()),
-        body: FutureBuilder(
+      bottomNavigationBar: Custom_Drawer().getButtomNavigation(),
+      appBar: Custom_AppBar().getAppBar(context),
+      drawer: Navigation_Drawer(new Auth()),
+      body: _getItemByCategory(widget.categoryName, context),
+      /*FutureBuilder(
             future: DataCollection().getCategories(),
             builder: (_, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -84,13 +83,13 @@ class _itemPageState extends State<Item_Screen> {
 
                                           ),
                                           //DataCollection().getImageFromStorage();
-                                          /*Image.network(
+                                          */ /*Image.network(
                                           snp.data.documents[index].data['imageUrl'],
                                           //snp.data.documents.data[index].data['imageUrl'],
                                           height: 100,
                                           width: 100,
                                           fit: BoxFit.cover,
-                                        ),*/
+                                        ),*/ /*
 
                                         ],
                                       );
@@ -105,7 +104,7 @@ class _itemPageState extends State<Item_Screen> {
                               );
                             }
                         );
-                      /*Expanded(
+                      */ /*Expanded(
 
 
 
@@ -174,9 +173,9 @@ class _itemPageState extends State<Item_Screen> {
                                                 1.toString(),
                                                 snapshot.data[index]
                                                     .data['price']
-                                            ), */ /*Navigator.push(context,
+                                            ), */ /* */ /*Navigator.push(context,
                                             MaterialPageRoute(builder: (context)=>
-                                                Item_Details())),*/ /*
+                                                Item_Details())),*/ /* */ /*
                                       )
                                     ],
                                   ),
@@ -189,10 +188,119 @@ class _itemPageState extends State<Item_Screen> {
                           ),
 
                         ),
-                      );*/
+                      );*/ /*
                     });
               }
-            }));
+            }
+            )*/
+    );
   }
 
+  Widget _getItemByCategory(String categoryName, BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8.0),
+          child: Stack(
+            children: <Widget>[
+              FutureBuilder(
+                future:
+                    DataCollection().getSubCollection("6scCjL6F4AvxjWGJyAlr"),
+                builder: (_, snp) {
+                  if (snp.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: Text("Loading...."),
+                    );
+                  } else if (snp.connectionState == ConnectionState.done) {
+                    return GridView.builder(
+                        itemCount: snp.data.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2),
+                        itemBuilder: (_, index) {
+                          if (snp.connectionState == ConnectionState.waiting) {
+                            return Center(
+                              child: Text("Loading...."),
+                            );
+                          } else {
+                            return Column(
+                              children: <Widget>[
+                                FutureBuilder(
+                                    future: DataCollection()
+                                        .getImageFromStorage(context,
+                                            snp.data[index].data['imageUrl']),
+                                    builder: (context, st) {
+                                      if (st.connectionState ==
+                                          ConnectionState.done) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Item_Details(
+                                                          toolbarname: snp
+                                                              .data[index]
+                                                              .data['itemName'],
+                                                          dataSource:
+                                                              snp.data[index],
+                                                        )));
+
+                                            debugPrint("clicked item");
+                                          },
+                                          child: st.data,
+                                        );
+                                      } else {
+                                        return Container(
+                                            child: CircularProgressIndicator());
+                                      }
+                                    }),
+                                Row(
+                                  children: <Widget>[
+                                    Flexible(
+                                      child: Text(
+                                        snp.data[index].data['itemName'],
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 0.0),
+                                      child: Text(
+                                        "\₹ " + snp.data[index].data['price'],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      iconSize: 20,
+                                      icon: const Icon(Icons.shopping_cart),
+                                      onPressed: () => Custom_AppBar()
+                                          .addItemToCart(
+                                              snp.data[index].data['itemId'],
+                                              snp.data[index].data['itemName'],
+                                              snp.data[index].data['imageUrl'],
+                                              snp.data[index]
+                                                  .data['description'],
+                                              1.toString(),
+                                              snp.data[index].data['price']),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            );
+                          }
+                        });
+                  } else {
+                    return Container();
+                  }
+                },
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }

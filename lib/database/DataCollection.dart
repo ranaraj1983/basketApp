@@ -3,9 +3,11 @@ import 'dart:math';
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/model/Order.dart';
 import 'package:basketapp/model/Product_Item.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 class DataCollection {
@@ -107,40 +109,58 @@ class DataCollection {
   }
 
   Future getSubCollection(String documentId) async {
-    return await firestoreInstance.collection("categories")
+    QuerySnapshot qs = await firestoreInstance
+        .collection("categories")
         .document(documentId)
         .collection("item")
         .getDocuments();
+    return qs.documents;
   }
 
+  Future getItemByCategories() async {
+    QuerySnapshot qs =
+        await firestoreInstance.collection("categories").getDocuments();
+
+    return qs.documents;
+  }
 
   Future getCategories() async {
-    QuerySnapshot qs = await firestoreInstance.collection("categories")
-        .getDocuments();
-
+    QuerySnapshot qs =
+        await firestoreInstance.collection("categories").getDocuments();
 
     return qs.documents;
   }
 
   Future<Widget> _getImageFromStorage(imageUrl) async {
-    Image m;
+    CachedNetworkImage m;
     StorageReference storageReference = await FirebaseStorage.instance
         .getReferenceFromUrl(imageUrl);
 
     return await storageReference.getDownloadURL().then((value) {
-      print(value);
-      return m = Image.network(
+      return m = CachedNetworkImage(
+        height: 100.0,
+        width: 100.0,
+
+        imageUrl: value.toString(),
+        progressIndicatorBuilder: (context, url, downloadProgress) =>
+            CircularProgressIndicator(value: downloadProgress.progress),
+        errorWidget: (context, url, error) => Icon(Icons.error),
+      );
+      /*return m = Image.network(
+
         value.toString(),
         fit: BoxFit.scaleDown,
-      );
+        height: 90,
+        width: 150,
+
+
+      );*/
     });
   }
 
   void addCategoryToDB(
       String categoryName, String categoryId, String categoryImageUrl) async {
     try {
-      print("inside add category");
-
       await firestoreInstance
           .collection("categories")
           .document(categoryName)
@@ -149,9 +169,39 @@ class DataCollection {
         'categoryName': categoryName,
         'categoryImageUrl': categoryImageUrl
       });
+      print("inside add category 2 " + categoryName);
+    } catch (er) {
+      print(er);
+    }
+  }
+
+  void addProductToDB(String itemName, String itemId, String description,
+      String price, String quantity, String stock, String categoryName) async {
+    try {
+      print("inside add product");
+
+      await firestoreInstance
+          .collection("categories")
+          .document(categoryName)
+          .collection("item")
+          .document()
+          .setData({
+        'itemName': itemName,
+        'itemId': itemId,
+        'categoryName': categoryName,
+        'quantity': quantity,
+        'description': description,
+        'price': price,
+        'stock': stock
+      });
       print("inside add category 2");
     } catch (er) {
       print(er);
     }
+  }
+
+  void updateUserProfile(String userId) {
+
+
   }
 }

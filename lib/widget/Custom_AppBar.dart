@@ -105,9 +105,19 @@ class Custom_AppBar {
 
   Widget getAppBar(BuildContext context) {
     return AppBar(
-      title: Text("Go Mudi"),
+      title: Text("Go Modi"),
       backgroundColor: Colors.yellowAccent,
       actions: <Widget>[
+        IconButton(
+          tooltip: 'Search',
+          icon: const Icon(Icons.search),
+          onPressed: () async {
+            final int selected = await showSearch<int>(
+              context: context,
+              //delegate: _delegate,
+            );
+          },
+        ),
         IconButton(
           icon: Icon(Icons.shopping_cart, color: Colors.black),
           onPressed: () => {

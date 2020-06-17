@@ -1,6 +1,9 @@
 import 'package:basketapp/checkout_screen.dart';
+import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/item_screen.dart';
 import 'package:basketapp/model/Product_Item.dart';
+import 'package:basketapp/widget/Custom_AppBar.dart';
+import 'package:basketapp/widget/Navigation_Drwer.dart';
 
 //import 'package:basketapp/model/ItemProduct.dart';
 import 'package:flutter/material.dart';
@@ -35,38 +38,6 @@ class Cart_Product_Item extends State<Cart_screen> {
 
   Cart_Product_Item(this.itemList);
 
-  /* List<Item> itemList = <Item>[
-    Item(
-        itemImage: 'images/grapes.jpg',
-        itemName: 'Black Grape',
-        itemQun: 'Qty:1',
-        itemPrice: '\₹ 100'),
-    Item(
-        itemImage: 'images/tomato.jpg',
-        itemName: 'Tomato',
-        itemQun: 'Qty:3',
-        itemPrice: '\₹ 112'),
-    Item(
-        itemImage: 'images/guava.jpg',
-        itemName: 'Guava',
-        itemQun: 'Qty:2',
-        itemPrice: '\₹ 105'),
-    Item(
-        itemImage: 'images/kiwi.jpg',
-        itemName: 'Kiwi',
-        itemQun: 'Qty:1',
-        itemPrice: '\₹ 90'),
-    Item(
-        itemImage: 'images/lemons.jpg',
-        itemName: 'Lemon',
-        itemQun: 'Qty:2',
-        itemPrice: '\₹ 70'),
-    Item(
-        itemImage: 'images/apple.jpg',
-        itemName: 'Apple',
-        itemQun: 'Qty:1',
-        itemPrice: '\₹ 50'),
-  ];*/
   String toolbarname = 'My Cart (4)';
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -129,6 +100,12 @@ class Cart_Product_Item extends State<Cart_screen> {
 
     return new Scaffold(
       key: _scaffoldKey,
+      drawer: Navigation_Drawer(new Auth()),
+      bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
+      appBar: Custom_AppBar().getAppBar(context),
+/*      key: _scaffoldKey,
+      drawer: Navigation_Drawer(new Auth()),
+      bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(_backIcon()),
@@ -148,12 +125,12 @@ class Cart_Product_Item extends State<Cart_screen> {
               width: 30.0,
               child: new GestureDetector(
                 onTap: () {
-                  /*Navigator.of(context).push(
+                  */ /*Navigator.of(context).push(
                   new MaterialPageRoute(
                       builder:(BuildContext context) =>
                       new CartItemsScreen()
                   )
-              );*/
+              );*/ /*
                 },
                 child: Stack(
                   children: <Widget>[
@@ -174,7 +151,7 @@ class Cart_Product_Item extends State<Cart_screen> {
             ),
           )
         ],
-      ),
+      ),*/
       body: Column(
         children: <Widget>[
           Container(

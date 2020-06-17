@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/item_details.dart';
 import 'package:basketapp/item_screen.dart';
 import 'package:basketapp/services/Order_Service.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
+import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:flutter/material.dart';
 
 class Patment extends StatefulWidget {
@@ -96,7 +98,9 @@ class payment extends State<Patment> {
 
     return new Scaffold(
       key: _scaffoldKey,
-      appBar: appBar,
+      drawer: Navigation_Drawer(new Auth()),
+      bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
+      appBar: Custom_AppBar().getAppBar(context),
       body: new Column(
         children: <Widget>[
           /*Container(

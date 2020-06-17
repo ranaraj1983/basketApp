@@ -18,12 +18,15 @@ class Item_Screen extends StatefulWidget {
 class _itemPageState extends State<Item_Screen> {
   _itemPageState(categoryName);
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      bottomNavigationBar: Custom_Drawer().getButtomNavigation(),
-      appBar: Custom_AppBar().getAppBar(context),
+      key: _scaffoldKey,
       drawer: Navigation_Drawer(new Auth()),
+      bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
+      appBar: Custom_AppBar().getAppBar(context),
       body: _getItemByCategory(widget.categoryName, context),
       /*FutureBuilder(
             future: DataCollection().getCategories(),

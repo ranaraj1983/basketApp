@@ -2,6 +2,7 @@ import 'package:basketapp/Cart_Screen.dart';
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/item_screen.dart';
+import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Custom_Drawer.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:flutter/material.dart';
@@ -72,6 +73,7 @@ class home extends State<Home_screen> {
   static const double height = 366.0;
   String name = 'My Wishlist';
   int selectedPosition = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +86,11 @@ class home extends State<Home_screen> {
     ShapeBorder shapeBorder;
 
     return Scaffold(
-      bottomNavigationBar: Custom_Drawer().getButtomNavigation(),
+      key: _scaffoldKey,
+      drawer: Navigation_Drawer(new Auth()),
+      bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
+      appBar: Custom_AppBar().getAppBar(context),
+      /*bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
       appBar: new AppBar(
         backgroundColor: Colors.greenAccent,
         title: Text("Grocery store"),
@@ -106,12 +112,12 @@ class home extends State<Home_screen> {
               width: 30.0,
               child: new GestureDetector(
                 onTap: () {
-                  /*Navigator.of(context).push(
+                  */ /*Navigator.of(context).push(
                   new MaterialPageRoute(
                       builder:(BuildContext context) =>
                       new CartItemsScreen()
                   )
-              );*/
+              );*/ /*
                 },
                 child: Stack(
                   children: <Widget>[
@@ -154,7 +160,7 @@ class home extends State<Home_screen> {
           )
         ],
       ),
-      drawer: Navigation_Drawer(new Auth()),
+      drawer: Navigation_Drawer(new Auth()),*/
       body: new SingleChildScrollView(
         child: Container(
           child: new Column(children: <Widget>[

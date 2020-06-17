@@ -92,18 +92,19 @@ class item_details extends State<Item_Details> {
     return new Scaffold(
         key: _scaffoldKey,
         drawer: Navigation_Drawer(new Auth()),
-        bottomNavigationBar: Custom_Drawer().getButtomNavigation(),
+        bottomNavigationBar:
+            Custom_AppBar().getButtomNavigation(context, widget),
         appBar: Custom_AppBar().getAppBar(context),
         body: Container(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
                 child: Column(children: <Widget>[
-                  Card(
-                    elevation: 4.0,
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+              Card(
+                elevation: 4.0,
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             // photo and title
                             SizedBox(

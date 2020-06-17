@@ -101,5 +101,41 @@ class Auth implements BaseAuth {
     FirebaseUser user = await _firebaseAuth.currentUser();
     return user.isEmailVerified;
   }
+
+  void updateUserProfile() async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+
+    UserUpdateInfo userUpdateInfo = new UserUpdateInfo();
+    String name = "Rana Das";
+    String url =
+        "gs://gomodi-ee0d7.appspot.com/users/Screenshot 2020-05-21 at 00.04.18.png";
+    userUpdateInfo.displayName = name;
+    userUpdateInfo.photoUrl = url;
+
+    user.updateProfile(userUpdateInfo);
+
+    /*updateDisplayName(user, name);
+    updateProfileImage(user, url);
+    updatePassword();*/
+  }
+
+  void changeProfileImage() {}
+
+  void updateDisplayName(String name) async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+
+    UserUpdateInfo userUpdateInfo = new UserUpdateInfo();
+    userUpdateInfo.displayName = name;
+    await user.updateProfile(userUpdateInfo);
+    await user.reload();
+    user = await _firebaseAuth.currentUser();
+    print(user.displayName);
+  }
+
+  void updateProfileImage() {
+    // user.updateProfile(userUpdateInfo);
+  }
+
+  void updatePassword() {}
 }
 

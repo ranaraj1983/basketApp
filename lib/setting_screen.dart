@@ -1,5 +1,8 @@
 import 'package:basketapp/Cart_Screen.dart';
+import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/item_details.dart';
+import 'package:basketapp/widget/Custom_AppBar.dart';
+import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_range_slider/flutter_range_slider.dart';
 
@@ -45,18 +48,10 @@ class Setting extends State<Setting_Screen> {
     final Orientation orientation = MediaQuery.of(context).orientation;
     return new Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(_backIcon()),
-            alignment: Alignment.centerLeft,
-            tooltip: 'Back',
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text(toolbarname),
-          backgroundColor: Colors.white,
-        ),
+        drawer: Navigation_Drawer(new Auth()),
+        bottomNavigationBar:
+            Custom_AppBar().getButtomNavigation(context, widget),
+        appBar: Custom_AppBar().getAppBar(context),
         body: Container(
           child: Column(
             children: <Widget>[

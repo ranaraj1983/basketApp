@@ -30,35 +30,6 @@ class Custom_Drawer {
     return null;
   }
 
-  Widget getButtomNavigation() {
-    int selectedPosition = 0;
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          title: Text('Home'),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.card_giftcard),
-          title: Text('Offer'),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.assignment_ind),
-          title: Text('Profile'),
-        ),
-      ],
-      currentIndex: selectedPosition,
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: Colors.grey.shade100,
-      selectedItemColor: Colors.blue,
-      unselectedItemColor: Colors.black,
-      onTap: (index) {
-        /*setState(() {
-          selectedPosition = index;
-        });*/
-      },
-    );
-  }
 
   Widget getDrawer(BuildContext context) {
     String name = "Custom Drawer";

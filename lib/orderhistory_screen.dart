@@ -6,6 +6,8 @@ import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/item_details.dart';
 import 'package:basketapp/model/Order.dart';
 import 'package:basketapp/model/Product_Item.dart';
+import 'package:basketapp/widget/Custom_AppBar.dart';
+import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_range_slider/flutter_range_slider.dart';
@@ -74,18 +76,10 @@ class oder_history extends State<Oder_History> {
     final Orientation orientation = MediaQuery.of(context).orientation;
     return new Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(_backIcon()),
-            alignment: Alignment.centerLeft,
-            tooltip: 'Back',
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text(toolbarname),
-          backgroundColor: Colors.white,
-        ),
+        drawer: Navigation_Drawer(new Auth()),
+        bottomNavigationBar:
+            Custom_AppBar().getButtomNavigation(context, widget),
+        appBar: Custom_AppBar().getAppBar(context),
         body: FutureBuilder(
           future: DataCollection().getOrderHistoryList(),
           builder: (_, AsyncSnapshot snapshot) {

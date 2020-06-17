@@ -1,4 +1,6 @@
+import 'package:basketapp/HomeScreen.dart';
 import 'package:basketapp/Payment_Screen.dart';
+import 'package:basketapp/main.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Custom_Drawer.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +91,8 @@ class check_out extends State<Checkout> {
       key: _scaffoldKey,
       drawer: Custom_Drawer().getDrawer(context),
       appBar: Custom_AppBar().getAppBar(context),
+      bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
+      //Custom_Drawer().getButtomNavigation(),
       body: new Column(
         children: <Widget>[
           Container(
@@ -156,7 +160,7 @@ class check_out extends State<Checkout> {
           new Container(
             alignment: Alignment.topLeft,
             margin:
-                EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
+            EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
             child: new Text(
               'Delivery Address',
               style: TextStyle(
@@ -247,9 +251,9 @@ class check_out extends State<Checkout> {
                                           bottom: 5.0),
                                       child: Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        MainAxisAlignment.start,
                                         children: <Widget>[
                                           new Text(
                                             'Delivery Address',
@@ -340,9 +344,9 @@ class check_out extends State<Checkout> {
                                           bottom: 5.0),
                                       child: Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        MainAxisAlignment.start,
                                         children: <Widget>[
                                           new Text(
                                             'Delivery Address',
@@ -433,9 +437,9 @@ class check_out extends State<Checkout> {
                                           bottom: 5.0),
                                       child: Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        MainAxisAlignment.start,
                                         children: <Widget>[
                                           new Text(
                                             'Delivery Address',
@@ -471,7 +475,7 @@ class check_out extends State<Checkout> {
           new Container(
             alignment: Alignment.topLeft,
             margin:
-                EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
+            EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
             child: new Text(
               'Order Summary',
               style: TextStyle(
@@ -515,7 +519,7 @@ class check_out extends State<Checkout> {
                         alignment: Alignment.center,
                         child: OutlineButton(
                             borderSide:
-                                BorderSide(color: Colors.amber.shade500),
+                            BorderSide(color: Colors.amber.shade500),
                             child: const Text('CONFIRM ORDER'),
                             textColor: Colors.amber.shade500,
                             onPressed: () {
@@ -536,6 +540,7 @@ class check_out extends State<Checkout> {
       ),
     );
   }
+
   IconData _add_icon() {
     switch (Theme.of(context).platform) {
       case TargetPlatform.android:
@@ -547,6 +552,7 @@ class check_out extends State<Checkout> {
     assert(false);
     return null;
   }
+
   IconData _sub_icon() {
     switch (Theme.of(context).platform) {
       case TargetPlatform.android:
@@ -560,10 +566,10 @@ class check_out extends State<Checkout> {
   }
 
   _verticalDivider() => Container(
-        padding: EdgeInsets.all(2.0),
-      );
+    padding: EdgeInsets.all(2.0),
+  );
 
   _verticalD() => Container(
-        margin: EdgeInsets.only(left: 3.0, right: 0.0, top: 0.0, bottom: 0.0),
-      );
+    margin: EdgeInsets.only(left: 3.0, right: 0.0, top: 0.0, bottom: 0.0),
+  );
 }

@@ -4,6 +4,8 @@ import 'package:basketapp/HomeScreen.dart';
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/model/User.dart';
 import 'package:basketapp/signup_screen.dart';
+import 'package:basketapp/widget/Custom_AppBar.dart';
+import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'database/DataCollection.dart';
 
-
 class Login_Screen extends StatefulWidget {
-
-
   final Key fieldKey;
   final String hintText;
   final String labelText;
@@ -51,7 +50,7 @@ class login extends State<Login_Screen> {
 
   String _email;
   String _password;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool _autovalidate = false;
   bool _formWasEdited = false;
@@ -71,21 +70,21 @@ class login extends State<Login_Screen> {
     // TODO: implement build
     bool _obscureText = true;
     return new Scaffold(
-        key: scaffoldKey,
-        appBar: new AppBar(
-          title: Text('Login'),
-          backgroundColor: Colors.deepOrangeAccent,
-        ),
+        key: _scaffoldKey,
+        drawer: Navigation_Drawer(new Auth()),
+        bottomNavigationBar: Custom_AppBar().getButtomNavigation(
+            context, widget),
+        appBar: Custom_AppBar().getAppBar(context),
         body: SafeArea(
-          child: new SingleChildScrollView(
-            child: new Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                new Container(
-                  height: 50.0,
-                  alignment: Alignment.topLeft,
-                  margin: EdgeInsets.only(top: 7.0),
-                  child: new Row(
+            child: new SingleChildScrollView(
+              child: new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  new Container(
+                    height: 50.0,
+                    alignment: Alignment.topLeft,
+                    margin: EdgeInsets.only(top: 7.0),
+                    child: new Row(
                     children: <Widget>[
                       _verticalD(),
                       new GestureDetector(

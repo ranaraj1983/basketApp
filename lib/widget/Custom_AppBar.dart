@@ -1,9 +1,10 @@
+import 'package:basketapp/Account_screen.dart';
+import 'package:basketapp/HomeScreen.dart';
 import 'package:basketapp/checkout_screen.dart';
-import 'package:basketapp/widget/Navigation_Drwer.dart';
-import 'package:basketapp/widget/Custom_Drawer.dart';
+import 'package:basketapp/database/Auth.dart';
+
 import 'package:flutter/material.dart';
 
-//import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:basketapp/widget/Cart_Counter.dart';
 import 'package:basketapp/model/Product_Item.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -31,6 +32,8 @@ class Custom_AppBar {
 
   Widget getCartListWidgetListView() {
     return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
         itemCount: cartCounter.cartList.length,
         itemBuilder: (BuildContext context, int index) {
           return SingleChildScrollView(
@@ -40,10 +43,7 @@ class Custom_AppBar {
               children: <Widget>[
                 Divider(height: 15.0),
                 Container(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height,
+
                   padding: EdgeInsets.all(5.0),
                   child: Row(
 
@@ -85,7 +85,7 @@ class Custom_AppBar {
                   ),
 
                 ),
-                Divider(height: 15.0),
+                // Divider(height: 15.0),
               ],
             ),
           );
@@ -140,6 +140,54 @@ class Custom_AppBar {
 
   void clearCart() {
     cartCounter.clearBusketCart();
+  }
+
+  int selectedPosition = 0;
+
+  void _navigateToPage(int index, BuildContext context) {
+    if (index == 0) {
+      Navigator.push(context, MaterialPageRoute(
+        builder: (context) => Home_screen(),
+      )
+      );
+    } else if (index == 1) {
+
+    } else if (index == 2) {
+      Navigator.push(context, MaterialPageRoute(
+        builder: (context) => Account_Screen(new Auth()),
+      )
+      );
+    }
+  }
+
+  Widget getButtomNavigation(BuildContext context, Widget widget) {
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          title: Text('Home'),
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.card_giftcard),
+          title: Text('Offer'),
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.assignment_ind),
+          title: Text('Profile'),
+        ),
+      ],
+      currentIndex: selectedPosition,
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: Colors.grey.shade100,
+      selectedItemColor: Colors.blue,
+      unselectedItemColor: Colors.black,
+      onTap: (index) {
+        selectedPosition = index;
+
+        _navigateToPage(index, context);
+        debugPrint(index.toString() + " :: " + selectedPosition.toString());
+      },
+    );
   }
 /* Widget getAppBar(BuildContext context) {
     return AppBar(

@@ -1,9 +1,10 @@
+import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/logind_signup.dart';
+import 'package:basketapp/widget/Custom_AppBar.dart';
+import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:flutter/material.dart';
 
 class Signup_Screen extends StatefulWidget {
-
-
   final Key fieldKey;
   final String hintText;
   final String labelText;
@@ -26,6 +27,7 @@ class Signup_Screen extends StatefulWidget {
       ),
     );
   }
+
   @override
   State<StatefulWidget> createState() => signup();
 }
@@ -41,7 +43,7 @@ class signup extends State<Signup_Screen> {
   String _firstname;
   String _lastname;
   String _phone;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _scaffoldKey = GlobalKey<FormState>();
 
   bool _autovalidate = false;
   bool _formWasEdited = false;
@@ -52,11 +54,11 @@ class signup extends State<Signup_Screen> {
     // TODO: implement build
     bool _obscureText = true;
     return new Scaffold(
-        key: scaffoldKey,
-        appBar: new AppBar(
-          title: Text('Signup'),
-          backgroundColor: Colors.white,
-        ),
+        key: _scaffoldKey,
+        drawer: Navigation_Drawer(new Auth()),
+        bottomNavigationBar: Custom_AppBar().getButtomNavigation(
+            context, widget),
+        appBar: Custom_AppBar().getAppBar(context),
         body: SafeArea(
             child: new SingleChildScrollView(
               child: new Column(
@@ -71,10 +73,10 @@ class signup extends State<Signup_Screen> {
                         _verticalD(),
                         new GestureDetector(
                           onTap: () {
-                             Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Login_Screen()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Login_Screen()));
                           },
                           child: new Text(
                             'Login',
@@ -298,6 +300,7 @@ class signup extends State<Signup_Screen> {
     else
       return null;
   }
+
   void _submit() {
     final form = formKey.currentState;
 
@@ -310,7 +313,6 @@ class signup extends State<Signup_Screen> {
     }
     else{
       showInSnackBar('Please fix the errors in red before submitting.');
-
     }
   }
 
@@ -319,14 +321,15 @@ class signup extends State<Signup_Screen> {
         content: Text(value)
     ));
   }
+
   void _performLogin() {
     // This is just a demo, so no actual login here.
-   /* final snackbar = SnackBar(
+    /* final snackbar = SnackBar(
       content: Text('Email: $_email, password: $_password'),
     );
 
     scaffoldKey.currentState.showSnackBar(snackbar);*/
-   Navigator.push(context, MaterialPageRoute(builder: (context)=> Login_Screen()));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> Login_Screen()));
   }
 
   _verticalD() => Container(

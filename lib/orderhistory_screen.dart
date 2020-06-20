@@ -1,16 +1,12 @@
-import 'dart:async';
+import 'dart:io';
 
-import 'package:basketapp/Cart_Screen.dart';
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/database/DataCollection.dart';
-import 'package:basketapp/item_details.dart';
-import 'package:basketapp/model/Order.dart';
-import 'package:basketapp/model/Product_Item.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:basketapp/widget/WidgetFactory.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_range_slider/flutter_range_slider.dart';
+import 'package:pdf/widgets.dart' as pdf;
 
 class Oder_History extends StatefulWidget {
   final String toolbarname;
@@ -92,6 +88,16 @@ class oder_history extends State<Oder_History> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   var d = snapshot.data;
+                  final doc = pdf.Document();
+                  doc.addPage(
+                    pdf.Page(
+                      build: (pdf.Context context) => pdf.Center(
+                        child: pdf.Text('Hello World!'),
+                      ),
+                    ),
+                  );
+                  final file = File('example.pdf');
+                  //file.writeAsBytesSync(doc.save());
                   return SafeArea(
                     child: Column(
                       children: <Widget>[
@@ -103,15 +109,14 @@ class oder_history extends State<Oder_History> {
                             elevation: 4.0,
                             child: Column(
                               children: <Widget>[
+                                WidgetFactory().getImageFromDatabase(
+                                    context, d[index].data['imageUrl']),
                                 ListTile(
                                   leading: Icon(Icons.album, size: 50),
                                   title: Text(d[index].data['itemName']),
                                   subtitle: Text(d[index].data['price']),
                                 ),
-                                //Text(d[index].data['itemName']),
 
-                                //Text(d[index].data['imageUrl']),
-                                //Text(d[index].data['itemId'])
                               ],
                             ),
                           ),

@@ -2,6 +2,11 @@ import 'package:basketapp/Account_screen.dart';
 import 'package:basketapp/HomeScreen.dart';
 import 'package:basketapp/checkout_screen.dart';
 import 'package:basketapp/database/Auth.dart';
+import 'package:basketapp/database/DataCollection.dart';
+import 'package:basketapp/item_details.dart';
+import 'package:basketapp/item_screen.dart';
+import 'package:basketapp/widget/WidgetFactory.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 
@@ -106,15 +111,15 @@ class Custom_AppBar {
   Widget getAppBar(BuildContext context) {
     return AppBar(
       title: Text("Go Modi"),
-      backgroundColor: Colors.yellowAccent,
+      backgroundColor: Colors.tealAccent,
       actions: <Widget>[
         IconButton(
           tooltip: 'Search',
           icon: const Icon(Icons.search),
-          onPressed: () async {
-            final int selected = await showSearch<int>(
+          onPressed: () {
+            showSearch(
               context: context,
-              //delegate: _delegate,
+              delegate: ItemSearchDelegate(),
             );
           },
         ),
@@ -151,7 +156,14 @@ class Custom_AppBar {
       )
       );
     } else if (index == 1) {
-
+      print("inside offer");
+      var categoryList = DataCollection().getCategories();
+      categoryList.then((value) {
+        value.documents.forEach((element) {
+          //element.documentID;
+          print(element.documentID);
+        });
+      });
     } else if (index == 2) {
       Navigator.push(context, MaterialPageRoute(
         builder: (context) => Account_Screen(new Auth()),
@@ -226,4 +238,97 @@ class Custom_AppBar {
       ],
     );
   }*/
+}
+
+class ItemSearchDelegate extends SearchDelegate<Product_Item> {
+  //DataCollection().getListOfProductItem();
+  //loadItemList();
+  //DataCollection().getListOfProductItem(output);
+  List<Product_Item> output = new List<Product_Item>();
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [IconButton(icon: Icon(Icons.clear), onPressed: () {
+      query = "";
+    })
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(onPressed: () async {
+      await DataCollection().getListOfProductItem();
+      //print(output);
+      close(context, null);
+    }, icon: Icon(Icons.arrow_back));
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return null;
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    //Future result =  DataCollection().getListOfProductItem(output);
+
+    //print(value);
+    /*output = query.isEmpty? output:
+     output.where((element) => element.itemName.toUpperCase().
+        startsWith(query.toUpperCase())).toList();*/
+    return Container(
+      child: FutureBuilder(
+        future: DataCollection().getCategoryList(),
+        builder: (_, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text("Searching");
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (_, index) {
+                return query.isEmpty ? Container() :
+                Container(
+                  child: FutureBuilder(
+                    future: DataCollection().getSubCollectionWithSearchKey(
+                        snapshot.data[index].documentID, query),
+                    builder: (_, snp) {
+                      if (snp.connectionState == ConnectionState.waiting) {
+                        return Text("");
+                      } else {
+                        return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: snp.data.length,
+                            itemBuilder: (_, ind) {
+                              return !snp.data[ind].data['itemName']
+                                  .toString()
+                                  .toLowerCase()
+                                  .
+                              contains(query.toLowerCase())
+                                  ? Text("")
+                                  : Container(
+                                child: WidgetFactory().getSearchListView(
+                                    context, snapshot.data[index],
+                                    snp.data[ind]),
+                                /*title: Text(snp.data[ind].data['itemName'] + " :: " + snapshot.data[index].documentID),
+                                        onTap: (){
+
+                                        },*/
+                              );
+                            }
+                        );
+                      }
+                    },
+                  ),
+                );
+              },
+
+            );
+          }
+        },
+      ),
+    );
+  }
+
+
 }

@@ -1,8 +1,11 @@
 import 'package:basketapp/HomeScreen.dart';
 import 'package:basketapp/Payment_Screen.dart';
+import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/main.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Custom_Drawer.dart';
+import 'package:basketapp/widget/WidgetFactory.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -21,9 +24,14 @@ class Item {
 
 class check_out extends State<Checkout> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   bool checkboxValueA = true;
   bool checkboxValueB = false;
   bool checkboxValueC = false;
+  String _email;
+  String _password;
+  final formKey = GlobalKey<FormState>();
 
   IconData _backIcon() {
     switch (Theme.of(context).platform) {
@@ -37,20 +45,11 @@ class check_out extends State<Checkout> {
     return null;
   }
 
-  List<Item> itemList = <Item>[
-    Item(itemName: 'Black Grape', itemQun: 'Qty:1', itemPrice: '\₹ 100'),
-    Item(itemName: 'Tomato', itemQun: 'Qty:3', itemPrice: '\₹ 112'),
-    Item(itemName: 'Mango', itemQun: 'Qty:2', itemPrice: '\₹ 105'),
-    Item(itemName: 'Capsicum', itemQun: 'Qty:1', itemPrice: '\₹ 90'),
-    Item(itemName: 'Lemon', itemQun: 'Qty:2', itemPrice: '\₹ 70'),
-    Item(itemName: 'Apple', itemQun: 'Qty:1', itemPrice: '\₹ 50'),
-  ];
 
-  String toolbarname = 'CheckOut';
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+
 
     final double height = MediaQuery.of(context).size.height;
     int totalPrice = Custom_AppBar().getCartTotalPrice();
@@ -64,7 +63,7 @@ class check_out extends State<Checkout> {
           Navigator.pop(context);
         },
       ),
-      title: Text(toolbarname),
+      title: Text("toolbarname"),
       backgroundColor: Colors.white,
       actions: <Widget>[
         new Padding(
@@ -283,7 +282,7 @@ class check_out extends State<Checkout> {
                       ),
                     ),
                   ),
-                  Container(
+                  /*Container(
                     height: 130.0,
                     width: 200.0,
                     margin: EdgeInsets.all(7.0),
@@ -375,8 +374,8 @@ class check_out extends State<Checkout> {
                         ],
                       ),
                     ),
-                  ),
-                  Container(
+                  ),*/
+                  /*Container(
                     height: 130.0,
                     width: 200.0,
                     margin: EdgeInsets.all(7.0),
@@ -468,7 +467,7 @@ class check_out extends State<Checkout> {
                         ],
                       ),
                     ),
-                  ),
+                  ),*/
                 ],
               )),
           _verticalDivider(),
@@ -481,7 +480,8 @@ class check_out extends State<Checkout> {
               style: TextStyle(
                   color: Colors.black87,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18.0),
+                  fontSize: 18.0
+              ),
             ),
           ),
           SingleChildScrollView(
@@ -489,7 +489,8 @@ class check_out extends State<Checkout> {
               children: <Widget>[
                 Observer(
                     builder: (_) =>
-                        Custom_AppBar().getCartListWidgetListView()),
+                        Custom_AppBar().getCartListWidgetListView()
+                ),
               ],
             ),
           ),
@@ -522,11 +523,18 @@ class check_out extends State<Checkout> {
                             BorderSide(color: Colors.amber.shade500),
                             child: const Text('CONFIRM ORDER'),
                             textColor: Colors.amber.shade500,
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Patment()));
+                            onPressed: () async {
+                              if (await Auth().getCurrentUserFuture() != null) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Patment()
+                                    )
+                                );
+                              } else {
+                                WidgetFactory().logInDialog(
+                                    context, _scaffoldKey, formKey);
+                              }
                             },
                             shape: new OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30.0),

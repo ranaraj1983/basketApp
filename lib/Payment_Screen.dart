@@ -4,6 +4,7 @@ import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/item_details.dart';
 import 'package:basketapp/item_screen.dart';
+import 'package:basketapp/orderhistory_screen.dart';
 import 'package:basketapp/services/Order_Service.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
@@ -306,17 +307,20 @@ class payment extends State<Patment> {
                             onPressed: () {
                               DataCollection().addCustomerCartToDatabase(
                                   Custom_AppBar().getCartList());
-                              new Timer(new Duration(seconds: 10), () {
+                              new Timer(new Duration(seconds: 5), () {
                                 debugPrint("Print after 5 seconds");
                                 DataCollection().getOrderHistoryList();
                               });
-                              new Timer(new Duration(seconds: 10), () {
+                              new Timer(new Duration(seconds: 5), () {
                                 debugPrint("Print after 5 seconds");
                                 Custom_AppBar().clearCart();
                               });
 
                               //Order_Service().placeOrder();
-                              //Navigator.push(context, MaterialPageRoute(builder: (context)=> Item_Screen("")));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Oder_History()));
                             },
                             shape: new OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30.0),

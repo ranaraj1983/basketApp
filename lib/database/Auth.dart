@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/model/Order.dart';
 import 'package:basketapp/model/User.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -54,9 +55,16 @@ class Auth implements BaseAuth {
     //return await _firebaseAuth.currentUser();
   }
 
+  /* String getUerId() async{
+    if (await _firebaseAuth.currentUser() != null) {
+
+    } else {
+
+    }
+  }*/
   Future<String> getCurrentUserId() async {
     FirebaseUser user = await _firebaseAuth.currentUser();
-    debugPrint("user :" + user.toString());
+    print(user);
     return user.uid;
     //return await _firebaseAuth.currentUser();
   }
@@ -113,10 +121,6 @@ class Auth implements BaseAuth {
     userUpdateInfo.photoUrl = url;
 
     user.updateProfile(userUpdateInfo);
-
-    /*updateDisplayName(user, name);
-    updateProfileImage(user, url);
-    updatePassword();*/
   }
 
   void changeProfileImage() {}
@@ -132,10 +136,33 @@ class Auth implements BaseAuth {
     print(user.displayName);
   }
 
-  void updateProfileImage() {
+  void updateProfileImage(String imageUrl) async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+
+    UserUpdateInfo userUpdateInfo = new UserUpdateInfo();
+    userUpdateInfo.photoUrl = imageUrl;
+    await user.updateProfile(userUpdateInfo);
+    await user.reload();
+    user = await _firebaseAuth.currentUser();
     // user.updateProfile(userUpdateInfo);
   }
 
   void updatePassword() {}
+
+  Future<String> registerUser(String email, String password, String firstName,
+      String lastName, String phone) async {
+    FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    )).user;
+    UserUpdateInfo userUpdateInfo = new UserUpdateInfo();
+    userUpdateInfo.displayName = firstName + " " + lastName;
+
+    await user.updateProfile(userUpdateInfo);
+    await user.reload();
+    user = await _firebaseAuth.currentUser();
+    DataCollection().createUserTable(user.uid, phone);
+    print(user.displayName);
+  }
 }
 

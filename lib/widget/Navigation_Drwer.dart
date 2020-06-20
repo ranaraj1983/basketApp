@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:basketapp/HomeScreen.dart';
 import 'package:basketapp/admin/AdminConsole.dart';
 import 'package:basketapp/database/Auth.dart';
+import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/help_screen.dart';
 import 'package:basketapp/logind_signup.dart';
+import 'package:basketapp/orderhistory_screen.dart';
 import 'package:basketapp/setting_screen.dart';
+import 'package:basketapp/widget/WidgetFactory.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Navigation_Drawer extends StatefulWidget {
   Navigation_Drawer(this.auth);
@@ -25,6 +31,7 @@ class _Navigation_Drawer extends State<Navigation_Drawer> {
   String name = 'My Wishlist';
   AuthStatus authStatus = AuthStatus.noSignIn;
   FirebaseUser firebaseUser;
+  File _image;
 
   @override
   void initState() {
@@ -44,27 +51,35 @@ class _Navigation_Drawer extends State<Navigation_Drawer> {
     });
   }
 
+  Widget _getUserProfile() {
+    return Card(
+        child: UserAccountsDrawerHeader(
+      accountName: new Text("${firebaseUser.displayName}"),
+      accountEmail: new Text("${firebaseUser.email}"),
+      /*decoration: new BoxDecoration(
+          backgroundBlendMode: BlendMode.difference,
+          color: Colors.white30,
+          image: new DecorationImage(
+            image: new ExactAssetImage('assets/images/veg.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),*/
+      currentAccountPicture: ClipOval(
+        child: Row(
+          children: <Widget>[
+            WidgetFactory()
+                .getImageFromDatabase(context, firebaseUser.photoUrl),
+          ],
+        ),
+      ),
+    ));
+  }
+
   Widget getSignInDrawer() {
     return Drawer(
       child: ListView(
         children: <Widget>[
-          Card(
-            child: UserAccountsDrawerHeader(
-              accountName: new Text("${firebaseUser.displayName}"),
-              accountEmail: new Text("${firebaseUser.email}"),
-              decoration: new BoxDecoration(
-                backgroundBlendMode: BlendMode.difference,
-                color: Colors.white30,
-                image: new DecorationImage(
-                  image: new ExactAssetImage('assets/images/veg.jpg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              currentAccountPicture: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      "https://www.fakenamegenerator.com/images/sil-female.png")),
-            ),
-          ),
+          _getUserProfile(),
           _getNavBarListWidget(name, Icons.favorite),
           new Divider(),
           _getNavBarListWidget("Order History", Icons.history),
@@ -102,15 +117,15 @@ class _Navigation_Drawer extends State<Navigation_Drawer> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => Setting_Screen(
-                            toolbarname: 'Setting',
-                          )));
+                        toolbarname: 'Setting',
+                      )));
             } else if (text == "Help") {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => Help_Screen(
-                            toolbarname: 'Help',
-                          )));
+                        toolbarname: 'Help',
+                      )));
             } else if (text == "Logout") {
               await Auth().signOut();
               setState(() {
@@ -118,16 +133,14 @@ class _Navigation_Drawer extends State<Navigation_Drawer> {
               });
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => Home_screen()));
-            } else if (text == "Dashboard") {
-            } else if (text == "Admin") {
+            } else if (text == "Dashboard") {} else if (text == "Admin") {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => AdminConsole()));
-            } else if (text == "") {
-            } else if (text == "") {
-            } else if (text == "") {
-            } else if (text == "") {
-            } else if (text == "") {
-            } else if (text == "") {}
+            } else if (text == "Order History") {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Oder_History()));
+            } else if (text == "") {} else if (text == "") {} else
+            if (text == "") {} else if (text == "") {} else if (text == "") {}
           }),
     );
   }

@@ -282,7 +282,7 @@ class _AdminConsole extends State<AdminConsole> {
                     }
                     return Row(
                       children: <Widget>[
-                        DropdownButton(
+                       /* DropdownButton(
                           items: currencyItems,
                           onChanged: (currencyValue) {
                             final snackBar = SnackBar(
@@ -300,7 +300,7 @@ class _AdminConsole extends State<AdminConsole> {
                             });
                           },
                           value: categoryName,
-                        ),
+                        ),*/
                         SizedBox(width: 50.0),
                       ],
                     );

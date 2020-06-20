@@ -10,6 +10,8 @@ class Product_Item {
   String totalAmount;
   String location;
   String orderDateTime;
+  String unit;
+  String brand;
 
   Product_Item(
       this.itemId,
@@ -22,5 +24,7 @@ class Product_Item {
       this.paymentOption,
       this.totalAmount,
       this.location,
-      this.orderDateTime);
+      this.orderDateTime,
+      this.unit,
+      this.brand);
 }

@@ -5,6 +5,7 @@ import 'package:basketapp/item_screen.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Custom_Drawer.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
+import 'package:basketapp/widget/WidgetFactory.dart';
 import 'package:flutter/material.dart';
 
 const String _kGalleryAssetsPackage = 'flutter_gallery_assets';
@@ -361,7 +362,7 @@ class home extends State<Home_screen> {
                 ),
               ]),
             ),
-            new Container(
+            Container(
               margin: EdgeInsets.only(top: 7.0),
               child: new Row(
                   mainAxisSize: MainAxisSize.max,
@@ -412,9 +413,9 @@ class home extends State<Home_screen> {
                     )
                   ]),
             ),
-            new Container(
+            Container(
               alignment: Alignment.topCenter,
-              height: 700.0,
+              height: 1000.0,
               child: FutureBuilder(
                   future: DataCollection().getCategoryList(),
                   builder: (_, AsyncSnapshot snapshot) {
@@ -433,61 +434,25 @@ class home extends State<Home_screen> {
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
                             var d = snapshot.data;
+                            //print(snapshot.data[index].documentID);
                             return GestureDetector(
+
                               onTap: () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             Item_Screen(
-                                                d[index]
-                                                    .data['categoryName'])));
+                                                snapshot.data[index]
+                                                    .documentID)));
                               },
                               child: Column(
                                 children: <Widget>[
-                                  FutureBuilder(
-                                    future: DataCollection()
-                                        .getImageFromStorage(context,
-                                        d[index].data['categoryImageUrl']),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.done) {
-                                        return Column(
-                                          children: <Widget>[
-                                            Card(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.all(
-                                                      Radius.circular(
-                                                          10.0))),
-                                              elevation: 10.0,
-                                              child: ClipRRect(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(10.0)),
-                                                child: Stack(
-                                                  children: <Widget>[
-                                                    snapshot.data,
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                          //child: snapshot.data,
-                                        );
-                                      }
+                                  WidgetFactory().getImageFromDatabase(context,
+                                      d[index].data['categoryImageUrl']),
 
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return Container(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
+                                  Text(snapshot.data[index].documentID),
 
-                                      return Container();
-                                    },
-                                  ),
-                                  Text(d[index].data['categoryName']),
-                                  //Image.network(d[index].data['categoryImageUrl']),
                                 ],
                               ),
                             );

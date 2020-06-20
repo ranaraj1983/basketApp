@@ -4,6 +4,7 @@ import 'package:basketapp/item_screen.dart';
 import 'package:basketapp/model/Product_Item.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
+import 'package:basketapp/widget/WidgetFactory.dart';
 
 //import 'package:basketapp/model/ItemProduct.dart';
 import 'package:flutter/material.dart';
@@ -24,14 +25,7 @@ class Cart_screen extends StatefulWidget {
   State<StatefulWidget> createState() => Cart_Product_Item(list);
 }
 
-/*class Item {
-  final String itemImage;
-  final String itemName;
-  final String itemQun;
-  final String itemPrice;
 
-  Item({this.itemImage, this.itemName, this.itemQun, this.itemPrice});
-}*/
 
 class Cart_Product_Item extends State<Cart_screen> {
   List<Product_Item> itemList;
@@ -103,55 +97,7 @@ class Cart_Product_Item extends State<Cart_screen> {
       drawer: Navigation_Drawer(new Auth()),
       bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
       appBar: Custom_AppBar().getAppBar(context),
-/*      key: _scaffoldKey,
-      drawer: Navigation_Drawer(new Auth()),
-      bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(_backIcon()),
-          alignment: Alignment.centerLeft,
-          tooltip: 'Back',
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text(toolbarname),
-        backgroundColor: Colors.white,
-        actions: <Widget>[
-          new Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: new Container(
-              height: 150.0,
-              width: 30.0,
-              child: new GestureDetector(
-                onTap: () {
-                  */ /*Navigator.of(context).push(
-                  new MaterialPageRoute(
-                      builder:(BuildContext context) =>
-                      new CartItemsScreen()
-                  )
-              );*/ /*
-                },
-                child: Stack(
-                  children: <Widget>[
-                    new IconButton(
-                        icon: new Icon(
-                          Icons.home,
-                          color: Colors.amber,
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Item_Screen("HOme")));
-                        }),
-                  ],
-                ),
-              ),
-            ),
-          )
-        ],
-      ),*/
+
       body: Column(
         children: <Widget>[
           Container(
@@ -262,15 +208,23 @@ class Cart_Product_Item extends State<Cart_screen> {
                                             children: <Widget>[
                                               SizedBox(
                                                   height: 110.0,
-                                                  width: 100.0,
-                                                  child:
-                                                  Image.network(
-                                                    itemList[ind]
-                                                        .imageUrl,
-                                                    height: 100,
-                                                    width: 100,
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                                width: 100.0,
+                                                child:
+                                                Image.network(
+                                                  itemList[ind]
+                                                      .imageUrl,
+                                                  height: 100,
+                                                  width: 100,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 110.0,
+                                                width: 100.0,
+                                                child: WidgetFactory()
+                                                    .getImageFromDatabase(
+                                                    context, itemList[ind]
+                                                    .imageUrl),
                                               ),
                                               SizedBox(
                                                   height: 110.0,
@@ -340,9 +294,7 @@ class Cart_Product_Item extends State<Cart_screen> {
                                                             ),
                                                             Text(
                                                               item.toString(),
-                                                              /*     style: descriptionStyle.copyWith(
-                                                   fontSize: 20.0,
-                                                   color: Colors.black87),*/
+
                                                             ),
                                                             Container(
                                                               margin: EdgeInsets
@@ -356,12 +308,7 @@ class Cart_Product_Item extends State<Cart_screen> {
                                                                       .amber
                                                                       .shade500),
                                                               onPressed: () {
-                                                                /* if(item<0){
 
-                                                 }
-                                                 else{
-                                                   item = item -1;
-                                                 }*/
                                                               },
                                                             ),
                                                           ],

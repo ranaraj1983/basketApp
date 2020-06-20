@@ -305,16 +305,7 @@ class login extends State<Login_Screen> {
    void performLogin (email, password) async {
     //_getItem();
     FirebaseUser user = await new Auth().signIn(email, password);
-    /*user.
-     new Timer(new Duration(milliseconds: 10), () {
-      user.then((value) {
-        useValue(value);
-      }, onError: (e) {
-        handleError(e);
-      });
-    });*/
 
-    //auth.then((user) => userId = user.uid);
     debugPrint("inside log in function _performLogin: " + user.uid);
 
     Navigator.push(

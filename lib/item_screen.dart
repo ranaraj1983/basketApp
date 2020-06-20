@@ -207,8 +207,7 @@ class _itemPageState extends State<Item_Screen> {
           child: Stack(
             children: <Widget>[
               FutureBuilder(
-                future:
-                    DataCollection().getSubCollection("6scCjL6F4AvxjWGJyAlr"),
+                future: DataCollection().getSubCollection(categoryName),
                 builder: (_, snp) {
                   if (snp.connectionState == ConnectionState.waiting) {
                     return Center(

@@ -1,7 +1,13 @@
+import 'dart:io';
+
+import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
+import 'package:basketapp/widget/WidgetFactory.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'database/Auth.dart';
 
@@ -22,6 +28,7 @@ enum AuthStatus {
 class account extends State<Account_Screen> {
   FirebaseUser firebaseUser;
   AuthStatus authStatus = AuthStatus.noSignIn;
+  File _image;
 
   @override
   void initState() {
@@ -43,6 +50,7 @@ class account extends State<Account_Screen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey<FormState> _userormKey = GlobalKey();
+
 
   @override
   Widget build(BuildContext context) {
@@ -97,27 +105,50 @@ class account extends State<Account_Screen> {
                           new Container(
                               alignment: Alignment.topCenter,
                               child: Container(
-                                width: 100.0,
-                                height: 100.0,
+                                width: 70.0,
+                                height: 70.0,
                                 margin: const EdgeInsets.all(10.0),
                                 // padding: const EdgeInsets.all(3.0),
                                 child: ClipOval(
 
-                                  child: Image.network(
-                                      'https://www.fakenamegenerator.com/images/sil-female.png'),
+                                  child: Row(
+                                    children: <Widget>[
+                                      WidgetFactory().getImageFromDatabase(
+                                          context, firebaseUser.photoUrl),
+                                    ],
+                                  ),
+                                  /* _image == null ? Image.network(
+                                      'https://www.fakenamegenerator.com/images/sil-female.png') : Image.file(_image),*/
                                 ),
                               )),
+                          Container(
+                            child: IconButton(
+                              icon: Icon(FontAwesomeIcons.camera, size: 30.0,),
+                              onPressed: () {
+                                _getImage(context);
+                                debugPrint("change image");
+                              },
+                            ),
+                          ),
 
-                          new FlatButton(
+
+                          FlatButton(
                             //onPressed: Auth().updateProfileImage(),
                             child: Text(
                               'Change',
                               style:
-                              TextStyle(fontSize: 13.0, color: Colors.blueAccent),
+                              TextStyle(fontSize: 13.0,
+                                  color: Colors.blueAccent),
                             ),
                             shape: RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0),
-                                side: BorderSide(color: Colors.blueAccent)),
+                                side: BorderSide(color: Colors.blueAccent)
+                            ),
+                            onPressed: () {
+                              DataCollection().uploadImageToStorage(context,
+                                  _image, _scaffoldKey);
+                              debugPrint("change image");
+                            },
                           ),
 
                           new Row(
@@ -141,7 +172,7 @@ class account extends State<Account_Screen> {
                                     ),
                                     _verticalDivider(),
                                     new Text(
-                                      "firebaseUser.phoneNumber",
+                                      "${firebaseUser.phoneNumber}",
                                       style: TextStyle(
                                           color: Colors.black45,
                                           fontSize: 13.0,
@@ -150,7 +181,7 @@ class account extends State<Account_Screen> {
                                     ),
                                     _verticalDivider(),
                                     new Text(
-                                      firebaseUser.email,
+                                      "${firebaseUser.email}",
                                       style: TextStyle(
                                           color: Colors.black45,
                                           fontSize: 13.0,
@@ -612,6 +643,14 @@ class account extends State<Account_Screen> {
       ],
     );
     showDialog(context: context, builder: (_) => alert);
+  }
+
+  void _getImage(BuildContext context) async {
+    final _picker = ImagePicker();
+    PickedFile imagePath = await _picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      _image = File(imagePath.path);
+    });
   }
 
 

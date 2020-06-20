@@ -1,5 +1,8 @@
 import 'dart:async';
+
+import 'dart:io';
 import 'dart:math';
+import 'package:path/path.dart' as path;
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/model/Order.dart';
 import 'package:basketapp/model/Product_Item.dart';
@@ -55,6 +58,40 @@ class DataCollection {
         itemId +
         " :: " +
         imageUrl);
+  }
+
+  //var output = new List<String>();
+  Future getListOfProductItem() async {
+    QuerySnapshot qs =
+        await firestoreInstance.collection("categories").getDocuments();
+    return qs.documents;
+
+/*      final searchResult =  firestoreInstance
+        .collection("categories")
+        .getDocuments().then(( qs ) {
+          qs.documents.forEach((element) async{
+
+            QuerySnapshot qs2 = await firestoreInstance
+                .collection("categories")
+                .document(element.documentID)
+                .collection("item")
+                .getDocuments();
+
+            qs2.documents.forEach((item) {
+              print(item.data['itemName']);
+              print(item.data['imageUrl']);
+              output.add(new Product_Item(
+                  item.data['itemId'],
+                  item.data['itemName'],
+                  item.data['imageUrl'],
+                  null,
+                  item.data['quantity'],
+                  item.data['price'],
+                  null, null, null, null, null, null,null
+              ));
+            });
+          });
+    });*/
   }
 
   Future getOrderHistoryList() async {
@@ -117,18 +154,38 @@ class DataCollection {
     return qs.documents;
   }
 
+  Future getSubCollectionWithSearchKey(String documentId,
+      String searchKey) async {
+    QuerySnapshot qs = await firestoreInstance
+        .collection("categories")
+        .document(documentId)
+        .collection("item")
+        .getDocuments();
+
+/*    CollectionReference qs = await firestoreInstance
+        .collection("categories")
+        .document(documentId).collection("item");//.where("itemName", isEqualTo: searchKey).getDocuments();
+    qs.where("foo", "==", searchKey)
+    qs.documents.where("foo", "==", searchKey).;*/
+    return qs.documents;
+  }
+
   Future getItemByCategories() async {
     QuerySnapshot qs =
-        await firestoreInstance.collection("categories").getDocuments();
+    await firestoreInstance.collection("categories").getDocuments();
 
     return qs.documents;
   }
 
   Future getCategories() async {
-    QuerySnapshot qs =
-        await firestoreInstance.collection("categories").getDocuments();
+    //QuerySnapshot qs;
+    return await firestoreInstance.collection("categories").getDocuments(); /*.then((value) {
+           value.documents.forEach((element) {
+             element.documentID;
+           });
+         });*/
 
-    return qs.documents;
+    //return qs;
   }
 
   Future<Widget> _getImageFromStorage(imageUrl) async {
@@ -200,8 +257,33 @@ class DataCollection {
     }
   }
 
+  Future uploadImageToStorage(BuildContext context, File file,
+      GlobalKey<ScaffoldState> _scaffoldKey) async {
+    String fileName = path.basename(file.path);
+    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(
+        fileName);
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(file);
+    var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    String url = dowurl.toString();
+    Auth().updateProfileImage(url);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+
+    _scaffoldKey.currentState.showSnackBar(
+        SnackBar(content: Text('Profile Picture Uploaded')));
+  }
+
   void updateUserProfile(String userId) {
 
 
+  }
+
+  void createUserTable(String uid, String phone) {
+    firestoreInstance
+        .collection("User").document(uid).setData(
+        {
+          'mobileNumber': phone,
+
+        }
+    );
   }
 }

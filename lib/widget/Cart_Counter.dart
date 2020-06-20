@@ -33,7 +33,7 @@ abstract class _Cart_Counter with Store {
   void addCartItemToBusket(String itemId, String itemName, String imageUrl,
       String description, String quantity, String price) {
     final cart = Product_Item(itemId, itemName, imageUrl, description, quantity,
-        price, null, null, null, null, null);
+        price, null, null, null, null, null, null, null);
     cartList.add(cart);
     //list.value
   }

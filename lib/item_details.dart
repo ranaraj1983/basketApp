@@ -261,28 +261,28 @@ class item_details extends State<Item_Details> {
                                                 (int.parse(this
                                                     .dataSource
                                                     .data['price']) *
-                                                    quantity)
+                                                        quantity)
                                                     .toString());
                                           },
                                           shape: new OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(30.0),
+                                                BorderRadius.circular(30.0),
                                           )),
                                     ),
                                   ),
-                                    ],
-                                  ))))),
-                  Container(
-                      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
-                      child: DefaultTextStyle(
-                          style: descriptionStyle,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              // three line description
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
+                                ],
+                              ))))),
+              Container(
+                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+                  child: DefaultTextStyle(
+                      style: descriptionStyle,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          // three line description
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
                                 child: Text(
                                   'Details',
                                   style: descriptionStyle.copyWith(

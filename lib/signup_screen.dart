@@ -1,8 +1,10 @@
+import 'package:basketapp/HomeScreen.dart';
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/logind_signup.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class Signup_Screen extends StatefulWidget {
   final Key fieldKey;
@@ -309,9 +311,11 @@ class signup extends State<Signup_Screen> {
 
       // Email & password matched our validation rules
       // and are saved to _email and _password fields.
-      _performLogin();
-    }
-    else{
+
+      debugPrint("inside registration");
+      _perFormRegistration();
+      //_performLogin();
+    } else{
       showInSnackBar('Please fix the errors in red before submitting.');
     }
   }
@@ -329,11 +333,59 @@ class signup extends State<Signup_Screen> {
     );
 
     scaffoldKey.currentState.showSnackBar(snackbar);*/
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> Login_Screen()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Login_Screen()));
   }
 
-  _verticalD() => Container(
-    margin: EdgeInsets.only(left: 10.0, right: 0.0, top: 0.0, bottom: 0.0),
-  );
+  _verticalD() =>
+      Container(
+        margin: EdgeInsets.only(left: 10.0, right: 0.0, top: 0.0, bottom: 0.0),
+      );
+
+  void _perFormRegistration() {
+    Auth().registerUser(_email, _password, _firstname, _lastname, _phone).
+    then((value) {
+      _showSuccessAlert(value);
+
+      print("Got Success: ${value}");
+    }).catchError((e, stackTrace) {
+      _showErrorAlert();
+      print("Got error: ${e.toString()}");
+    });
+  }
+
+  void _showErrorAlert() {
+    Alert(
+
+      context: context,
+      type: AlertType.error,
+      title: "Registration Alert ",
+      desc: "Email address already in use or invalid format!",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Ok",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+        )
+      ],
+    ).show();
+  }
+
+  void _showSuccessAlert(String value) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          Future.delayed(Duration(seconds: 2), () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => Home_screen()));
+          });
+          return AlertDialog(
+            title: Text('You have registered successfully!'),
+          );
+        });
+  }
 
 }

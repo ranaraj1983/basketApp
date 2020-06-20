@@ -3,6 +3,7 @@ import 'package:basketapp/HomeScreen.dart';
 //import 'package:basketapp/model/ItemProduct.dart';
 import 'package:basketapp/model/Product_Item.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mobx/mobx.dart';
 import 'dart:async';
 
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       theme: new ThemeData(
+          //fontFamily: GoogleFonts.getFont('Lato'),
           primaryColor: Colors.white,
           primaryColorDark: Colors.white30,
           accentColor: Colors.blue),

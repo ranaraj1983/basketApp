@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'dart:io';
 import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:path/path.dart' as path;
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/model/Order.dart';
@@ -27,15 +27,12 @@ class DataCollection {
     String itemName;
     String imageUrl;
     List itemList;
-    //debugPrint("inside database call");
-    //QuerySnapshot querySnapshot = await Firestore.instance.collection("User").getDocuments();
+
     firestoreInstance
         .collection("categories")
         .getDocuments()
         .then((querySnapshot) {
       querySnapshot.documents.forEach((result) {
-        //debugPrint(result.data);
-        //debugPrint("inside database call1");
         itemList.add(result);
         itemName = result.data['itemName'];
         imageUrl = result.data['imageUrl'];
@@ -66,32 +63,7 @@ class DataCollection {
         await firestoreInstance.collection("categories").getDocuments();
     return qs.documents;
 
-/*      final searchResult =  firestoreInstance
-        .collection("categories")
-        .getDocuments().then(( qs ) {
-          qs.documents.forEach((element) async{
 
-            QuerySnapshot qs2 = await firestoreInstance
-                .collection("categories")
-                .document(element.documentID)
-                .collection("item")
-                .getDocuments();
-
-            qs2.documents.forEach((item) {
-              print(item.data['itemName']);
-              print(item.data['imageUrl']);
-              output.add(new Product_Item(
-                  item.data['itemId'],
-                  item.data['itemName'],
-                  item.data['imageUrl'],
-                  null,
-                  item.data['quantity'],
-                  item.data['price'],
-                  null, null, null, null, null, null,null
-              ));
-            });
-          });
-    });*/
   }
 
   Future getOrderHistoryList() async {
@@ -141,8 +113,8 @@ class DataCollection {
   }
 
   Future<Widget> getImageFromStorage(BuildContext context,
-      String imageUrl) async {
-    return await _getImageFromStorage(imageUrl);
+      String imageUrl, double height, double width) async {
+    return await _getImageFromStorage(imageUrl, height, width);
   }
 
   Future getSubCollection(String documentId) async {
@@ -162,11 +134,7 @@ class DataCollection {
         .collection("item")
         .getDocuments();
 
-/*    CollectionReference qs = await firestoreInstance
-        .collection("categories")
-        .document(documentId).collection("item");//.where("itemName", isEqualTo: searchKey).getDocuments();
-    qs.where("foo", "==", searchKey)
-    qs.documents.where("foo", "==", searchKey).;*/
+
     return qs.documents;
   }
 
@@ -178,40 +146,25 @@ class DataCollection {
   }
 
   Future getCategories() async {
-    //QuerySnapshot qs;
-    return await firestoreInstance.collection("categories").getDocuments(); /*.then((value) {
-           value.documents.forEach((element) {
-             element.documentID;
-           });
-         });*/
-
-    //return qs;
+    return await firestoreInstance.collection("categories").getDocuments();
   }
 
-  Future<Widget> _getImageFromStorage(imageUrl) async {
+  Future<Widget> _getImageFromStorage(String imageUrl, double height,
+      double width) async {
     CachedNetworkImage m;
     StorageReference storageReference = await FirebaseStorage.instance
         .getReferenceFromUrl(imageUrl);
 
     return await storageReference.getDownloadURL().then((value) {
       return m = CachedNetworkImage(
-        height: 100.0,
-        width: 100.0,
-
+        height: height,
+        width: width,
         imageUrl: value.toString(),
         progressIndicatorBuilder: (context, url, downloadProgress) =>
             CircularProgressIndicator(value: downloadProgress.progress),
         errorWidget: (context, url, error) => Icon(Icons.error),
       );
-      /*return m = Image.network(
 
-        value.toString(),
-        fit: BoxFit.scaleDown,
-        height: 90,
-        width: 150,
-
-
-      );*/
     });
   }
 
@@ -283,6 +236,31 @@ class DataCollection {
         {
           'mobileNumber': phone,
 
+        }
+    );
+  }
+
+  Future getUserDetails() async {
+    String userId = await Auth().getCurrentUserId();
+    DocumentSnapshot user = await firestoreInstance
+        .collection("User")
+        .document(userId).get();
+    return user.data;
+  }
+
+  void addAddress(FirebaseUser user, String displayName, String street,
+      String city, String district, String mobilenumber, String state,
+      String pincode) {
+    firestoreInstance
+        .collection("User").document(user.uid).setData(
+        {
+          'mobileNumber': mobilenumber,
+          'displayName': displayName,
+          'street': street,
+          'city': city,
+          'district': district,
+          'state': state,
+          'pincode': pincode
         }
     );
   }

@@ -96,7 +96,6 @@ class WidgetFactory {
                     FirebaseUser user = await new Auth()
                         .signIn(_email, _password)
                         .catchError((e) {
-                      print("inside error");
                       scaffoldKey.currentState.showSnackBar(
                           SnackBar(content: Text("invalid user credential")));
                     });
@@ -111,8 +110,7 @@ class WidgetFactory {
                             MaterialPageRoute(
                                 builder: (context) => Home_screen()));
                   }
-                  /*_submit( _email,  _password,  context,
-                      formKey,  scaffoldKey);*/
+
                 },
               ),
             ],
@@ -153,10 +151,7 @@ class WidgetFactory {
                                 : null,
                             onSaved: (val) => formKey.currentState
                                 .setState(() => _email = val),
-                            /*onSaved: (val) {
-                                _email = val;
 
-                              } ,*/
                           ),
                           TextFormField(
                             obscureText: true,
@@ -192,120 +187,25 @@ class WidgetFactory {
               ),
             ),
 
-            /*Container(
-              height: 300.0,
-              child:Row(
 
-                children: <Widget>[
-                  Form(
-
-                    key: formKey,
-                    autovalidate: false,
-                    child:  Row(
-                      children: <Widget>[
-                        */ /*TextFormField(
-                          decoration: const InputDecoration(
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black87,style: BorderStyle.solid),
-                              ),
-                              focusedBorder:  UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black87,style: BorderStyle.solid),
-                              ),
-                              icon: Icon(Icons.email,color: Colors.black38,),
-                              hintText: 'Your email address',
-                              labelText: 'E-mail',
-                              labelStyle: TextStyle(color: Colors.black54)
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                          validator: (val) =>
-                          !val.contains('@') ? 'Not a valid email.' : null,
-                          onSaved: (val) => _email = val,
-                        ),
-
-                        const SizedBox(height: 24.0),*/ /*
-
-                       */ /* TextFormField(
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black87,style: BorderStyle.solid),
-                              ),
-                              focusedBorder:  UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black87,style: BorderStyle.solid),
-                              ),
-                              icon: Icon(Icons.lock,color: Colors.black38,),
-                              hintText: 'Your password',
-                              labelText: 'Password',
-                              labelStyle: TextStyle(color: Colors.black54)
-                          ),
-
-                          validator: (val) =>
-                          val.length < 6 ? 'Password too short.' : null,
-                          onSaved: (val) => _password = val,
-                        ),*/ /*
-                       */ /* new Container(
-                          alignment: Alignment.bottomRight,
-                          child: new GestureDetector(
-                            onTap: (){
-                              _submit( _email,  _password,  context,
-                                  formKey,  scaffoldKey);
-                            },
-                            child: Text('LOGIN',style: TextStyle(
-                                color: Colors.orange,fontSize: 20.0,fontWeight: FontWeight.bold
-                            ),),
-                          ),
-                        ),*/ /*
-
-                      ],
-                    ),
-                  ),
-
-                ],
-              ),
-            ),*/
           );
         });
 
     //showDialog(context: context, builder: (_) => alert);
   }
 
-  void _submit(String _email, String _password, BuildContext context,
-      GlobalKey<FormState> formKey, GlobalKey<ScaffoldState> scaffoldKey) {
-    final form = formKey.currentState;
-
-    if (form.validate()) {
-      form.save();
-
-      // Email & password matched our validation rules
-      // and are saved to _email and _password fields.
-      performLogin(_email, _password, context);
-    } else {
-      showInSnackBar(
-          'Please fix the errors in red before submitting.', scaffoldKey);
-    }
-  }
-
-  void showInSnackBar(String value, GlobalKey<ScaffoldState> scaffoldKey) {
-    scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(value)));
-  }
-
-  void performLogin(String email, String password, BuildContext context) async {
-    //_getItem();
-    FirebaseUser user = await new Auth().signIn(email, password);
-
-    debugPrint("inside log in function _performLogin: " + user.uid);
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => Home_screen()));
-  }
 
   Widget getImageFromDatabase(BuildContext context, String imageUrl) {
     return FutureBuilder(
-        future: DataCollection().getImageFromStorage(context, imageUrl),
+        future: DataCollection().getImageFromStorage(
+            context, imageUrl, 100, 100),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return ClipRRect(
+
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
               child: Stack(
+
                 children: <Widget>[
                   snapshot.data == null
                       ? Image.network(
@@ -393,6 +293,266 @@ class WidgetFactory {
               borderRadius: BorderRadius.circular(30.0),
             )),
       ),
+    );
+  }
+
+  Future<void> addAddressDialog(BuildContext context,
+      GlobalKey<FormState> formKey) async {
+    FirebaseUser user = await new Auth().getCurrentUser();
+    String userId;
+    String name;
+    String mobilenumber;
+    String street;
+    String city;
+    String district;
+    String state;
+    String pincode;
+
+    return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text('Add'),
+                onPressed: () {
+                  final form = formKey.currentState;
+                  //form.context.widget.
+                  if (form.validate()) {
+                    form.save();
+
+                    DataCollection().addAddress(
+                        user,
+                        user.displayName,
+                        street,
+                        city,
+                        district,
+                        mobilenumber,
+                        state,
+                        pincode);
+                  }
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+            content: Form(
+                key: formKey,
+                autovalidate: false,
+                child: SingleChildScrollView(
+                    child: Column(
+                        children: <Widget>[
+                          Text("${user.displayName}"),
+                          TextFormField(
+                            decoration: InputDecoration(
+                                labelText: 'Street Name'),
+                            // ignore: missing_return
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter Street Name';
+                              }
+                            },
+                            onSaved: (val) =>
+                                formKey.currentState.setState(() =>
+                                street = val),
+                          ),
+                          TextFormField(
+                            decoration: InputDecoration(labelText: 'City'),
+                            // ignore: missing_return
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter City Name';
+                              }
+                            },
+                            onSaved: (val) =>
+                                formKey.currentState.setState(() => city = val),
+                          ),
+                          TextFormField(
+                            decoration: InputDecoration(labelText: 'District'),
+                            // ignore: missing_return
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter district Name';
+                              }
+                            },
+                            onSaved: (val) =>
+                                formKey.currentState.setState(() =>
+                                district = val),
+                          ),
+                          TextFormField(
+                            decoration: InputDecoration(labelText: 'pincode'),
+                            // ignore: missing_return
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter pincode Name';
+                              }
+                            },
+                            onSaved: (val) =>
+                                formKey.currentState.setState(() =>
+                                pincode = val),
+                          ),
+
+                          TextFormField(
+                            decoration: InputDecoration(
+                                labelText: 'mobile number'),
+                            // ignore: missing_return
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter phone number';
+                              }
+                            },
+                            onSaved: (val) =>
+                                formKey.currentState.setState(() =>
+                                mobilenumber = val),
+                          ),
+
+                        ]
+                    )
+                )
+            ),
+          );
+        }
+    );
+  }
+
+  Widget getAddressBar(BuildContext context, GlobalKey<FormState> formKey) {
+    return Container(
+        height: 165.0,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: <Widget>[
+            Container(
+              height: 165.0,
+              width: 56.0,
+              child: Card(
+                elevation: 3.0,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    new Container(
+                        alignment: Alignment.center,
+                        child: IconButton(
+                            icon: Icon(Icons.add), onPressed: () {
+                          WidgetFactory().addAddressDialog(context, formKey);
+                        }
+                        )
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              height: 165.0,
+              width: 200.0,
+              margin: EdgeInsets.all(7.0),
+              child: Card(
+                elevation: 3.0,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new Column(
+                      children: <Widget>[
+                        FutureBuilder(
+                          future: DataCollection().getUserDetails(),
+                          builder: (_, AsyncSnapshot snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: Text("Loading...."),
+                              );
+                            } else {
+                              return Container(
+                                margin: EdgeInsets.only(
+                                    left: 12.0,
+                                    top: 5.0,
+                                    right: 0.0,
+                                    bottom: 5.0),
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
+                                    children: <Widget>[
+                                      Text(
+                                        snapshot.data['displayName'],
+                                        style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                      Text(
+                                        snapshot.data['mobileNumber'],
+                                        style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                      //_verticalDivider(),
+                                      Text(
+                                        snapshot.data['street'],
+                                        style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                      //_verticalDivider(),
+                                      Text(
+                                        snapshot.data['city'],
+                                        style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                      //_verticalDivider(),
+                                      Text(
+                                        snapshot.data['district'],
+                                        style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                      //_verticalDivider(),
+                                      Text(
+                                        snapshot.data['pincode'],
+                                        style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                      //_verticalDivider(),
+
+
+                                    ]
+                                ),
+                              );
+                            }
+                          },
+                        ),
+
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+          ],
+        )
     );
   }
 }

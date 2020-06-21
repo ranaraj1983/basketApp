@@ -26,29 +26,36 @@ class address {
 
 class Data {
 
-  final int id ;
+  final String userId;
+
   final String name;
   final String mobilenumber;
   final String address;
   final String city;
-  final String distric;
+  final String district;
   final String state;
   final String pincode;
 
-  Data({this.id, this.name, this.mobilenumber, this.address, this.city,
-      this.distric, this.state, this.pincode});
+  Data(
+      {this.userId,
+      this.name,
+      this.mobilenumber,
+      this.address,
+      this.city,
+      this.district,
+      this.state,
+      this.pincode});
 
-  factory Data.fromJson(Map<String,dynamic> parsedJson){
+  factory Data.fromJson(Map<String, dynamic> parsedJson) {
     return Data(
-      id: parsedJson['id'],
-      name: parsedJson['name'],
-      mobilenumber: parsedJson['mobilenumber'],
-      address: parsedJson['address'],
-      city: parsedJson['city'],
-      distric: parsedJson['distric'],
+        userId: parsedJson['id'],
+        name: parsedJson['name'],
+        mobilenumber: parsedJson['mobilenumber'],
+        address: parsedJson['address'],
+        city: parsedJson['city'],
+        district: parsedJson['distric'],
         state: parsedJson['state'],
-        pincode: parsedJson['pincode']
-    );
+        pincode: parsedJson['pincode']);
   }
 
 

@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'dart:async';
+import 'package:path_provider/path_provider.dart';
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
@@ -17,23 +18,6 @@ class Oder_History extends StatefulWidget {
   State<StatefulWidget> createState() => oder_history(toolbarname);
 }
 
-class Item {
-  final String name;
-  final String deliveryTime;
-  final String oderId;
-  final String oderAmount;
-  final String paymentType;
-  final String address;
-  final String cancelOder;
-
-  Item({this.name,
-    this.deliveryTime,
-    this.oderId,
-    this.oderAmount,
-    this.paymentType,
-    this.address,
-    this.cancelOder});
-}
 
 class oder_history extends State<Oder_History> {
   bool checkboxValueA = true;
@@ -46,6 +30,54 @@ class oder_history extends State<Oder_History> {
 
   oder_history(this.toolbarname);
 
+  String filePath;
+  String appDocPath;
+
+  @override
+  void initState() {
+    super.initState();
+    prepareDirPath();
+  }
+
+  void prepareDirPath() async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    Stream<FileSystemEntity> files = appDocDir.list();
+
+    files.listen((data) {
+      print("Data: " + data.toString());
+    });
+
+    final doc = pdf.Document();
+    doc.addPage(
+      pdf.Page(
+        build: (pdf.Context context) => pdf.Center(
+          child: pdf.Text('Hello World!'),
+        ),
+      ),
+    );
+
+    appDocPath = appDocDir.path;
+    filePath = "$appDocPath/text.txt";
+    Directory output = await getTemporaryDirectory();
+    final file = File('${appDocPath}/example.pdf');
+    file.writeAsBytesSync(doc.save());
+
+    /*setState(() {
+      final doc = pdf.Document();
+      doc.addPage(
+        pdf.Page(
+          build: (pdf.Context context) => pdf.Center(
+            child: pdf.Text('Hello World!'),
+          ),
+        ),
+      );
+      //final file = File("example.pdf");
+       //await file.writeAsBytes(doc.save());
+      //final file = File('example.pdf');
+
+    });*/
+    //print(files);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,19 +117,11 @@ class oder_history extends State<Oder_History> {
               );
             } else {
               return ListView.builder(
+
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   var d = snapshot.data;
-                  final doc = pdf.Document();
-                  doc.addPage(
-                    pdf.Page(
-                      build: (pdf.Context context) => pdf.Center(
-                        child: pdf.Text('Hello World!'),
-                      ),
-                    ),
-                  );
-                  final file = File('example.pdf');
-                  //file.writeAsBytesSync(doc.save());
+
                   return SafeArea(
                     child: Column(
                       children: <Widget>[
@@ -109,6 +133,7 @@ class oder_history extends State<Oder_History> {
                             elevation: 4.0,
                             child: Column(
                               children: <Widget>[
+
                                 WidgetFactory().getImageFromDatabase(
                                     context, d[index].data['imageUrl']),
                                 ListTile(

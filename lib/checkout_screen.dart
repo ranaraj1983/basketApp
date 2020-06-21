@@ -1,6 +1,7 @@
 import 'package:basketapp/HomeScreen.dart';
 import 'package:basketapp/Payment_Screen.dart';
 import 'package:basketapp/database/Auth.dart';
+import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/main.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Custom_Drawer.dart';
@@ -159,7 +160,7 @@ class check_out extends State<Checkout> {
           new Container(
             alignment: Alignment.topLeft,
             margin:
-            EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
+                EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
             child: new Text(
               'Delivery Address',
               style: TextStyle(
@@ -168,332 +169,30 @@ class check_out extends State<Checkout> {
                   fontSize: 18.0),
             ),
           ),
-          new Container(
-              height: 165.0,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: <Widget>[
-                  Container(
-                    height: 165.0,
-                    width: 56.0,
-                    child: Card(
-                      elevation: 3.0,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          new Container(
-                              alignment: Alignment.center,
-                              child: IconButton(
-                                  icon: Icon(Icons.add), onPressed: null)),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 165.0,
-                    width: 200.0,
-                    margin: EdgeInsets.all(7.0),
-                    child: Card(
-                      elevation: 3.0,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          new Column(
-                            children: <Widget>[
-                              new Container(
-                                margin: EdgeInsets.only(
-                                    left: 12.0,
-                                    top: 5.0,
-                                    right: 0.0,
-                                    bottom: 5.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    new Text(
-                                      'Naomi A. Schultz',
-                                      style: TextStyle(
-                                        color: Colors.black87,
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 0.5,
-                                      ),
-                                    ),
-                                    _verticalDivider(),
-                                    new Text(
-                                      '2585 Columbia Boulevard',
-                                      style: TextStyle(
-                                          color: Colors.black45,
-                                          fontSize: 13.0,
-                                          letterSpacing: 0.5),
-                                    ),
-                                    _verticalDivider(),
-                                    new Text(
-                                      'Salisbury',
-                                      style: TextStyle(
-                                          color: Colors.black45,
-                                          fontSize: 13.0,
-                                          letterSpacing: 0.5),
-                                    ),
-                                    _verticalDivider(),
-                                    new Text(
-                                      'MD 21801',
-                                      style: TextStyle(
-                                          color: Colors.black45,
-                                          fontSize: 13.0,
-                                          letterSpacing: 0.5),
-                                    ),
-                                    new Container(
-                                      margin: EdgeInsets.only(
-                                          left: 00.0,
-                                          top: 05.0,
-                                          right: 0.0,
-                                          bottom: 5.0),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          new Text(
-                                            'Delivery Address',
-                                            style: TextStyle(
-                                              fontSize: 15.0,
-                                              color: Colors.black26,
-                                            ),
-                                          ),
-                                          _verticalD(),
-                                          new Checkbox(
-                                            value: checkboxValueA,
-                                            onChanged: (bool value) {
-                                              setState(() {
-                                                checkboxValueA = value;
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  /*Container(
-                    height: 130.0,
-                    width: 200.0,
-                    margin: EdgeInsets.all(7.0),
-                    child: Card(
-                      elevation: 3.0,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          new Column(
-                            children: <Widget>[
-                              new Container(
-                                margin: EdgeInsets.only(
-                                    left: 12.0,
-                                    top: 5.0,
-                                    right: 0.0,
-                                    bottom: 5.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    new Text(
-                                      'Lisa J. Cunningham',
-                                      style: TextStyle(
-                                        color: Colors.black87,
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 0.5,
-                                      ),
-                                    ),
-                                    _verticalDivider(),
-                                    new Text(
-                                      '49 Bagwell Avenue',
-                                      style: TextStyle(
-                                          color: Colors.black45,
-                                          fontSize: 13.0,
-                                          letterSpacing: 0.5),
-                                    ),
-                                    _verticalDivider(),
-                                    new Text(
-                                      'Ocala',
-                                      style: TextStyle(
-                                          color: Colors.black45,
-                                          fontSize: 13.0,
-                                          letterSpacing: 0.5),
-                                    ),
-                                    _verticalDivider(),
-                                    new Text(
-                                      ' FL 34471',
-                                      style: TextStyle(
-                                          color: Colors.black45,
-                                          fontSize: 13.0,
-                                          letterSpacing: 0.5),
-                                    ),
-                                    new Container(
-                                      margin: EdgeInsets.only(
-                                          left: 00.0,
-                                          top: 05.0,
-                                          right: 0.0,
-                                          bottom: 5.0),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          new Text(
-                                            'Delivery Address',
-                                            style: TextStyle(
-                                              fontSize: 15.0,
-                                              color: Colors.black12,
-                                            ),
-                                          ),
-                                          _verticalD(),
-                                          new Checkbox(
-                                            value: checkboxValueB,
-                                            onChanged: (bool value) {
-                                              setState(() {
-                                                checkboxValueB = value;
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),*/
-                  /*Container(
-                    height: 130.0,
-                    width: 200.0,
-                    margin: EdgeInsets.all(7.0),
-                    child: Card(
-                      elevation: 3.0,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          new Column(
-                            children: <Widget>[
-                              new Container(
-                                margin: EdgeInsets.only(
-                                    left: 12.0,
-                                    top: 5.0,
-                                    right: 0.0,
-                                    bottom: 5.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    new Text(
-                                      'Elizabeth J. Schmidt',
-                                      style: TextStyle(
-                                        color: Colors.black87,
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 0.5,
-                                      ),
-                                    ),
-                                    _verticalDivider(),
-                                    new Text(
-                                      '3674 Oakway Lane',
-                                      style: TextStyle(
-                                          color: Colors.black45,
-                                          fontSize: 13.0,
-                                          letterSpacing: 0.5),
-                                    ),
-                                    _verticalDivider(),
-                                    new Text(
-                                      'Long Beach',
-                                      style: TextStyle(
-                                          color: Colors.black45,
-                                          fontSize: 13.0,
-                                          letterSpacing: 0.5),
-                                    ),
-                                    _verticalDivider(),
-                                    new Text(
-                                      ' CA 90802',
-                                      style: TextStyle(
-                                          color: Colors.black45,
-                                          fontSize: 13.0,
-                                          letterSpacing: 0.5),
-                                    ),
-                                    new Container(
-                                      margin: EdgeInsets.only(
-                                          left: 00.0,
-                                          top: 05.0,
-                                          right: 0.0,
-                                          bottom: 5.0),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          new Text(
-                                            'Delivery Address',
-                                            style: TextStyle(
-                                              fontSize: 15.0,
-                                              color: Colors.black12,
-                                            ),
-                                          ),
-                                          _verticalD(),
-                                          new Checkbox(
-                                            value: checkboxValueC,
-                                            onChanged: (bool value) {
-                                              setState(() {
-                                                checkboxValueC = value;
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),*/
-                ],
-              )),
+          WidgetFactory().getAddressBar(context, formKey),
           _verticalDivider(),
           new Container(
             alignment: Alignment.topLeft,
             margin:
-            EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
-            child: new Text(
+                EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
+            child: Text(
               'Order Summary',
               style: TextStyle(
                   color: Colors.black87,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18.0
+                  fontSize: 18.0),
+            ),
+          ),
+          Column(
+            children: <Widget>[
+              Observer(
+
+                  builder: (_) =>
+                      Custom_AppBar().getCartListWidgetListView()
               ),
-            ),
+            ],
           ),
-          SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Observer(
-                    builder: (_) =>
-                        Custom_AppBar().getCartListWidgetListView()
-                ),
-              ],
-            ),
-          ),
+
           Container(
               alignment: Alignment.bottomLeft,
               height: 50.0,
@@ -528,7 +227,8 @@ class check_out extends State<Checkout> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Patment()
+                                        builder: (context) =>
+                                            Payment_Screen(totalPrice)
                                     )
                                 );
                               } else {

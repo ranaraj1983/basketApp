@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
         width: 250.0,
         height: 250.0,
         child: new Image.asset(
-          'images/gro.jpg',
+          'images/gro_TEST.jpg',
         ),
       ),
     );

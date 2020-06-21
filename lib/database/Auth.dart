@@ -1,11 +1,8 @@
 import 'dart:async';
-
 import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/model/Order.dart';
 import 'package:basketapp/model/User.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 
 abstract class BaseAuth {
   Future<FirebaseUser>  signIn(String email, String password);
@@ -55,13 +52,6 @@ class Auth implements BaseAuth {
     //return await _firebaseAuth.currentUser();
   }
 
-  /* String getUerId() async{
-    if (await _firebaseAuth.currentUser() != null) {
-
-    } else {
-
-    }
-  }*/
   Future<String> getCurrentUserId() async {
     FirebaseUser user = await _firebaseAuth.currentUser();
     print(user);
@@ -118,7 +108,7 @@ class Auth implements BaseAuth {
     String url =
         "gs://gomodi-ee0d7.appspot.com/users/Screenshot 2020-05-21 at 00.04.18.png";
     userUpdateInfo.displayName = name;
-    userUpdateInfo.photoUrl = url;
+    //userUpdateInfo.photoUrl = url;
 
     user.updateProfile(userUpdateInfo);
   }

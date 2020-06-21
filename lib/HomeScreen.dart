@@ -172,11 +172,11 @@ class home extends State<Home_screen> {
                   _verticalD(),
                   new GestureDetector(
                     onTap: () {
-                      Navigator.push(
+                      /*Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  Item_Screen('Best value Products')));
+                                  Item_Screen('Best value Products')));*/
                     },
                     child: new Text(
                       'Best value',
@@ -235,7 +235,7 @@ class home extends State<Home_screen> {
               height: 188.0,
               margin: EdgeInsets.only(left: 5.0),
               child:
-              ListView(scrollDirection: Axis.horizontal, children: <Widget>[
+                  ListView(scrollDirection: Axis.horizontal, children: <Widget>[
                 SafeArea(
                   top: true,
                   bottom: true,
@@ -415,7 +415,7 @@ class home extends State<Home_screen> {
             ),
             Container(
               alignment: Alignment.topCenter,
-              height: 1000.0,
+              //height: 1000.0,
               child: FutureBuilder(
                   future: DataCollection().getCategoryList(),
                   builder: (_, AsyncSnapshot snapshot) {
@@ -425,9 +425,10 @@ class home extends State<Home_screen> {
                       );
                     } else {
                       return GridView.builder(
-                          primary: false,
-                          physics: AlwaysScrollableScrollPhysics(),
+                          primary: true,
+                          physics: ScrollPhysics(),
                           padding: const EdgeInsets.all(10.0),
+                          shrinkWrap: true,
                           gridDelegate:
                           new SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2),

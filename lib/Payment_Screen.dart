@@ -10,27 +10,29 @@ import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:flutter/material.dart';
 
-class Patment extends StatefulWidget {
+class Payment_Screen extends StatefulWidget {
+  int totalPrice;
+
+  Payment_Screen(this.totalPrice);
+
   @override
-  State<StatefulWidget> createState() => payment();
+  State<StatefulWidget> createState() => _Paymet_Screen(totalPrice);
 }
 
-class Item {
-  final String itemName;
-  final String itemQun;
-  final String itemPrice;
+class _Paymet_Screen extends State<Payment_Screen> {
+  int totalPrice;
 
-  Item({this.itemName, this.itemQun, this.itemPrice});
-}
+  _Paymet_Screen(this.totalPrice);
 
-class payment extends State<Patment> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool checkboxValueA = true;
   bool checkboxValueB = false;
   bool checkboxValueC = false;
 
   IconData _backIcon() {
-    switch (Theme.of(context).platform) {
+    switch (Theme
+        .of(context)
+        .platform) {
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
         return Icons.arrow_back;
@@ -49,14 +51,6 @@ class payment extends State<Patment> {
     });
   }
 
-  List<Item> itemList = <Item>[
-    Item(itemName: 'Black Grape', itemQun: 'Qty:1', itemPrice: '\₹ 100'),
-    Item(itemName: 'Tomato', itemQun: 'Qty:3', itemPrice: '\₹ 112'),
-    Item(itemName: 'Mango', itemQun: 'Qty:2', itemPrice: '\₹ 105'),
-    Item(itemName: 'Capsicum', itemQun: 'Qty:1', itemPrice: '\₹ 90'),
-    Item(itemName: 'Lemon', itemQun: 'Qty:2', itemPrice: '\₹ 70'),
-    Item(itemName: 'Apple', itemQun: 'Qty:1', itemPrice: '\₹ 50'),
-  ];
   String toolbarname = 'CheckOut';
 
   @override
@@ -293,7 +287,7 @@ class payment extends State<Patment> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '\₹ 524',
+                      '\₹ ${totalPrice}',
                       style: TextStyle(fontSize: 17.0, color: Colors.black54),
                     ),
                     Padding(
@@ -307,11 +301,11 @@ class payment extends State<Patment> {
                             onPressed: () {
                               DataCollection().addCustomerCartToDatabase(
                                   Custom_AppBar().getCartList());
-                              new Timer(new Duration(seconds: 5), () {
+                              new Timer(new Duration(seconds: 1), () {
                                 debugPrint("Print after 5 seconds");
                                 DataCollection().getOrderHistoryList();
                               });
-                              new Timer(new Duration(seconds: 5), () {
+                              new Timer(new Duration(seconds: 1), () {
                                 debugPrint("Print after 5 seconds");
                                 Custom_AppBar().clearCart();
                               });

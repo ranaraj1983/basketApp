@@ -41,17 +41,14 @@ class Custom_AppBar {
         shrinkWrap: true,
         itemCount: cartCounter.cartList.length,
         itemBuilder: (BuildContext context, int index) {
-          return SingleChildScrollView(
+          return Container(
             //height: MediaQuery.of(context).size.height,
             child: Column(
-
               children: <Widget>[
                 Divider(height: 15.0),
                 Container(
-
                   padding: EdgeInsets.all(5.0),
                   child: Row(
-
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,8 +107,19 @@ class Custom_AppBar {
 
   Widget getAppBar(BuildContext context) {
     return AppBar(
-      title: Text("Go Modi"),
-      backgroundColor: Colors.tealAccent,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            'images/goMudilogo.png',
+            fit: BoxFit.contain,
+            height: 32,
+          ),
+
+        ],
+
+      ),
+      backgroundColor: Colors.lime[400],
       actions: <Widget>[
         IconButton(
           tooltip: 'Search',

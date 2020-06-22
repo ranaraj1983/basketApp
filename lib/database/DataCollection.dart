@@ -185,8 +185,18 @@ class DataCollection {
     }
   }
 
-  void addProductToDB(String itemName, String itemId, String description,
-      String price, String quantity, String stock, String categoryName) async {
+  void addProductToDB(
+      String itemName,
+      String itemId,
+      String description,
+      String price,
+      String quantity,
+      String stock,
+      String categoryName,
+      String brand,
+      String imageUrl,
+      String unit,
+      String offer) async {
     try {
       print("inside add product");
 
@@ -194,7 +204,7 @@ class DataCollection {
           .collection("categories")
           .document(categoryName)
           .collection("item")
-          .document()
+          .document(itemName)
           .setData({
         'itemName': itemName,
         'itemId': itemId,
@@ -202,7 +212,11 @@ class DataCollection {
         'quantity': quantity,
         'description': description,
         'price': price,
-        'stock': stock
+        'imageUrl': imageUrl,
+        'brand': brand,
+        'stock': stock,
+        'offer': offer,
+        'unit': unit
       });
       print("inside add category 2");
     } catch (er) {
@@ -210,11 +224,47 @@ class DataCollection {
     }
   }
 
-  Future uploadImageToStorage(BuildContext context, File file,
+  Future uploadImageToStorageAndCategoryImge(BuildContext context, File file,
+      GlobalKey<ScaffoldState> _scaffoldKey, String categoryId) async {
+    String fileName = path.basename(file.path);
+    StorageReference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(file);
+    var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    String url = dowurl.toString();
+    _updateCategoryImageUrl(categoryId, url);
+    //Auth().updateProfileImage(url);
+    //StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+
+    /*_scaffoldKey.currentState.showSnackBar(
+        SnackBar(content: Text('Profile Picture Uploaded')));*/
+  }
+
+  Future uploadImageToStorageAndProductImge(
+      BuildContext context,
+      File file,
+      GlobalKey<ScaffoldState> _scaffoldKey,
+      String productName,
+      String categoryName) async {
+    String fileName = path.basename(file.path);
+    StorageReference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(file);
+    var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    String url = dowurl.toString();
+    _updateProductImageUrl(categoryName, url, productName);
+    //Auth().updateProfileImage(url);
+    //StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+
+    /*_scaffoldKey.currentState.showSnackBar(
+        SnackBar(content: Text('Profile Picture Uploaded')));*/
+  }
+
+  Future uploadImageToStorageAndProfileImge(BuildContext context, File file,
       GlobalKey<ScaffoldState> _scaffoldKey) async {
     String fileName = path.basename(file.path);
-    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(
-        fileName);
+    StorageReference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(file);
     var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
     String url = dowurl.toString();
@@ -261,6 +311,30 @@ class DataCollection {
           'district': district,
           'state': state,
           'pincode': pincode
+        }
+    );
+  }
+
+  void _updateProductImageUrl(String url, String categoryName,
+      String itemName) {
+    firestoreInstance
+        .collection("categories")
+        .document(categoryName)
+        .collection("item")
+        .document(itemName).setData(
+        {
+          'imageUrl': url,
+
+        }
+    );
+  }
+
+  void _updateCategoryImageUrl(String url, String categoryName) {
+    firestoreInstance
+        .collection("categories").document(categoryName).setData(
+        {
+          'categoryImageUrl': url,
+
         }
     );
   }

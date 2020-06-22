@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:basketapp/PdfViewerPage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/database/DataCollection.dart';
@@ -36,7 +38,34 @@ class oder_history extends State<Oder_History> {
   @override
   void initState() {
     super.initState();
-    prepareDirPath();
+    //prepareDirPath();
+  }
+
+  _generatePdfAndView(BuildContext context, var itemData) async {
+    final pdf.Document doc = pdf.Document(deflate: zlib.encode);
+    print(itemData);
+    doc.addPage(
+      pdf.Page(
+        build: (pdf.Context context) => pdf.Center(
+          child: pdf.Container(
+            child: pdf.Column(children: [
+              pdf.Text(itemData['price']),
+            ]),
+          ),
+        ),
+      ),
+    );
+    final String dir = (await getApplicationDocumentsDirectory()).path;
+    final String exDir = (await getExternalStorageDirectory()).path;
+    final String path = '$dir/invoice.pdf';
+    final File file = File(path);
+    await file.writeAsBytes(doc.save());
+    print(exDir);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PdfViewerPage(path: path),
+      ),
+    );
   }
 
   void prepareDirPath() async {
@@ -120,7 +149,7 @@ class oder_history extends State<Oder_History> {
 
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
-                  var d = snapshot.data;
+                  var itemData = snapshot.data[index].data;
 
                   return SafeArea(
                     child: Column(
@@ -135,18 +164,26 @@ class oder_history extends State<Oder_History> {
                               children: <Widget>[
 
                                 WidgetFactory().getImageFromDatabase(
-                                    context, d[index].data['imageUrl']),
+                                    context, itemData['imageUrl']),
                                 ListTile(
                                   leading: Icon(Icons.album, size: 50),
-                                  title: Text(d[index].data['itemName']),
-                                  subtitle: Text(d[index].data['price']),
+                                  title: Text(itemData['itemName']),
+                                  subtitle: Text(itemData['price']),
                                 ),
 
                               ],
                             ),
+
                           ),
                         ),
-
+                        RaisedButton(
+                          onPressed: () {
+                            _generatePdfAndView(context, itemData);
+                            print("clicked");
+                          },
+                          child: Text("Invoice"),
+                        ),
+                        //Text("test"),
                       ],
                     ),
                   );

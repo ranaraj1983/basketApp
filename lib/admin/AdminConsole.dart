@@ -1,7 +1,13 @@
+import 'dart:io';
+
+import 'package:basketapp/admin/AddProduct_Screen.dart';
 import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/model/Category.dart';
+import 'package:basketapp/widget/WidgetFactory.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 
 //import 'package:fluttertoast/fluttertoast.dart';
 //import '../db/category.dart';
@@ -15,8 +21,9 @@ class AdminConsole extends StatefulWidget {
 }
 
 class _AdminConsole extends State<AdminConsole> {
-  var categoryName = "baby food";
-  var selectedCurrency, selectedType;
+  File _image;
+  String categoryName;
+
   Page _selectedPage = Page.dashboard;
   MaterialColor active = Colors.red;
   MaterialColor notActive = Colors.grey;
@@ -24,6 +31,15 @@ class _AdminConsole extends State<AdminConsole> {
   TextEditingController brandController = TextEditingController();
   GlobalKey<FormState> _categoryFormKey = GlobalKey();
   GlobalKey<FormState> _brandFormKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      categoryName = "Beverrages";
+    });
+    //prepareDirPath();
+  }
 
   //BrandService _brandService = BrandService();
   //CategoryService _categoryService = CategoryService();
@@ -132,7 +148,7 @@ class _AdminConsole extends State<AdminConsole> {
                           title: FlatButton.icon(
                               onPressed: null,
                               icon: Icon(Icons.track_changes),
-                              label: Text("Producs")),
+                              label: Text("Products")),
                           subtitle: Text(
                             '120',
                             textAlign: TextAlign.center,
@@ -198,7 +214,11 @@ class _AdminConsole extends State<AdminConsole> {
               leading: Icon(Icons.add),
               title: Text("Add product"),
               onTap: () {
-                _createProduct();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddProduct_Screen()));
+                //_createProduct();
               },
             ),
             Divider(),
@@ -251,129 +271,229 @@ class _AdminConsole extends State<AdminConsole> {
     String price;
     String stock;
     String description;
+    String brandName;
+    String unit;
+    String offer;
     String quantity = 1.toString();
 
     String dropdownValue = 'One';
     List<String> val = ["1", "2"];
-    var alert = SingleChildScrollView(
-        child: AlertDialog(
-      content: Form(
-        key: _categoryFormKey,
-        child: Column(
-          children: <Widget>[
-            FutureBuilder(
-                future: DataCollection().getCategoryList(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData)
-                    return const Text("Loading.....");
-                  else {
-                    List<DropdownMenuItem> currencyItems = [];
-                    for (int i = 0; i < snapshot.data.length; i++) {
-                      //DocumentSnapshot snap = snapshot.data.documents[i];
-                      currencyItems.add(
-                        DropdownMenuItem(
-                          child: Text(
-                            snapshot.data[i].documentID,
-                            style: TextStyle(color: Color(0xff11b719)),
-                          ),
-                          value: "${snapshot.data[i].documentID}",
-                        ),
-                      );
-                    }
-                    return Row(
-                      children: <Widget>[
-                       /* DropdownButton(
-                          items: currencyItems,
-                          onChanged: (currencyValue) {
-                            final snackBar = SnackBar(
-                              content: Text(
-                                'Selected Currency value is $currencyValue',
-                                style: TextStyle(color: Color(0xff11b719)),
-                              ),
-                            );
-                            //Scaffold.of(context).showSnackBar(snackBar);
-                            setState(() {
-                              print(currencyValue + " :: ");
-                              //selectedCurrency = currencyValue;
-                              categoryName = currencyValue;
-                              print(currencyValue + " :: " + categoryName);
-                            });
-                          },
-                          value: categoryName,
-                        ),*/
-                        SizedBox(width: 50.0),
-                      ],
-                    );
-                  }
-                  //return Container();
-                }),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Product Name'),
-              // ignore: missing_return
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter your Product name';
-                }
-              },
-              onSaved: (val) => setState(() => itemName = val),
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Product Id'),
-              // ignore: missing_return
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter your Product id';
-                }
-              },
-              onSaved: (val) => setState(() => itemId = val),
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Description'),
-              // ignore: missing_return
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter your Description';
-                }
-              },
-              onSaved: (val) => setState(() => description = val),
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Price'),
-              // ignore: missing_return
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter your Product Price';
-                }
-              },
-              onSaved: (val) => setState(() => price = val),
-            ),
-          ],
-        ),
-      ),
-      actions: <Widget>[
-        FlatButton(
-            onPressed: () {
-              final FormState form = _categoryFormKey.currentState;
-              form.save();
+    var alert = StatefulBuilder(
+        builder: (context, setState) {
+          return SingleChildScrollView(
+              child: AlertDialog(
+                content: Form(
+                  key: _categoryFormKey,
+                  child: Column(
+                    children: <Widget>[
+                      FutureBuilder(
+                          future: DataCollection().getCategoryList(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData)
+                              return const Text("Loading.....");
+                            else {
+                              List<DropdownMenuItem> itemValues = [];
+                              for (int i = 0; i < snapshot.data.length; i++) {
+                                //DocumentSnapshot snap = snapshot.data.documents[i];
+                                itemValues.add(
+                                  DropdownMenuItem(
+                                    child: Text(
+                                      snapshot.data[i].documentID,
+                                      style: TextStyle(
+                                          color: Color(0xff11b719)),
+                                    ),
+                                    value: "${snapshot.data[i].documentID}",
+                                  ),
+                                );
+                              }
+                              return Row(
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      DropdownButton(
+                                        items: itemValues,
+                                        isDense: true,
+                                        value: categoryName,
+                                        onChanged: (itemValue) {
+                                          setState(() {
+                                            //selectedCurrency = currencyValue;
+                                            categoryName = itemValue;
+                                            print(itemValue + " :: " +
+                                                categoryName);
+                                          });
+                                          return Text(itemValue); /*SnackBar(
+                                  content: Text(
+                                    'Selected Currency value is $itemValue',
+                                    style: TextStyle(color: Color(0xff11b719)),
+                                  ),
+                                );*/
 
-              print('Email: ${itemName} ::  ${itemId} ::  ${description}');
-              if (itemName != null) {
-                //print("inside click : " + categoryController.text);
-                DataCollection().addProductToDB(itemName, itemId, description,
-                    price, quantity, stock, categoryName);
-                //_categoryService.createCategory(categoryController.text);
-              }
-              //Fluttertoast.showToast(msg: 'category created');
-              Navigator.pop(context);
-            },
-            child: Text('ADD')),
-        FlatButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('CANCEL')),
-      ],
-    ));
+
+                                        },
+
+                                      ),
+                                    ],
+
+                                  ),
+
+
+                                ],
+                              );
+                            }
+
+                            //return Container();
+                          }),
+                      /*GridView.count(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 4,
+                          mainAxisSpacing: 4,
+                          primary: false,
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.all(20),
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: (){},
+                              child: Container(
+                                color: Colors.black12,
+                                child: Icon(FontAwesomeIcons.plusCircle),
+                              ),
+                            ),
+                          ],
+
+                        ),*/
+                      GestureDetector(
+                        child: _image == null
+                            ? WidgetFactory().getImageFromDatabase(
+                            context,
+                            "gs://gomodi-ee0d7.appspot.com/category/OIL/Screenshot 2020-06-19 at 20.01.36.png")
+                            :
+                        Image.file(_image),
+                        onTap: () async {
+                          final _picker = ImagePicker();
+                          PickedFile imagePath = await _picker.getImage(
+                              source: ImageSource.gallery);
+                          setState(() {
+                            _image = File(imagePath.path);
+                            print("imagePath $_image");
+                            /*DataCollection().uploadImageToStorageAndProfileImge(
+                                  context, _image, null);*/
+                          });
+                        },
+                      ),
+
+                      TextFormField(
+                        decoration: InputDecoration(labelText: 'Product Name'),
+                        // ignore: missing_return
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your Product name';
+                          }
+                        },
+
+                        onSaved: (val) => setState(() => itemName = val),
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(labelText: 'Product Id'),
+                        // ignore: missing_return
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your Product id';
+                          }
+                        },
+                        onSaved: (val) => setState(() => itemId = val),
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(labelText: 'Unit'),
+                        // ignore: missing_return
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your unit';
+                          }
+                        },
+                        onSaved: (val) => setState(() => unit = val),
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(labelText: 'Product Brand'),
+                        // ignore: missing_return
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your Product brand name';
+                          }
+                        },
+                        onSaved: (val) => setState(() => brandName = val),
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(labelText: 'Stock'),
+                        // ignore: missing_return
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your Product Stock';
+                          }
+                        },
+                        onSaved: (val) => setState(() => stock = val),
+                      ),
+
+                      TextFormField(
+                        decoration: InputDecoration(labelText: 'Description'),
+                        // ignore: missing_return
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your Description';
+                          }
+                        },
+                        onSaved: (val) => setState(() => description = val),
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(labelText: 'Price'),
+                        // ignore: missing_return
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your Product Price';
+                          }
+                        },
+                        onSaved: (val) => setState(() => price = val),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                      onPressed: () {
+                        final FormState form = _categoryFormKey.currentState;
+                        form.save();
+
+                        print(
+                            'Email: ${itemName} ::  ${itemId} ::  ${description}');
+                        if (itemName != null) {
+                          //print("inside click : " + categoryController.text);
+                          DataCollection().addProductToDB(
+                              itemName,
+                              itemId,
+                              description,
+                              price,
+                              quantity,
+                              stock,
+                              categoryName,
+                              brandName,
+                              imageUrl,
+                              unit,
+                              offer);
+                          //_categoryService.createCategory(categoryController.text);
+                        }
+                        //Fluttertoast.showToast(msg: 'category created');
+                        Navigator.pop(context);
+                      },
+                      child: Text('ADD')),
+                  FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('CANCEL')),
+                ],
+              ));
+        }
+    );
+
     showDialog(context: context, builder: (_) => alert);
   }
 

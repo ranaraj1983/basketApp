@@ -145,8 +145,9 @@ class account extends State<Account_Screen> {
                                         new BorderRadius.circular(30.0),
                                     side: BorderSide(color: Colors.blueAccent)),
                                 onPressed: () {
-                                  DataCollection().uploadImageToStorage(
-                                      context, _image, _scaffoldKey);
+                                  DataCollection()
+                                      .uploadImageToStorageAndProfileImge(
+                                          context, _image, _scaffoldKey);
                                   debugPrint("change image");
                                 },
                               ),

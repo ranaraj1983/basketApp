@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:basketapp/HomeScreen.dart';
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/database/DataCollection.dart';
@@ -18,8 +20,7 @@ class WidgetFactory {
     });
   }
 
-  Widget getSearchListView(
-      BuildContext context, var categorySnapshot, var itemSnapshot) {
+  Widget getSearchListView(BuildContext context, var categorySnapshot, var itemSnapshot) {
     return ListView(
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
@@ -65,8 +66,7 @@ class WidgetFactory {
     );
   }
 
-  Future<void> logInDialog(
-      BuildContext context,
+  Future<void> logInDialog(BuildContext context,
       GlobalKey<ScaffoldState> scaffoldKey,
       GlobalKey<FormState> formKey) async {
     String _email;
@@ -104,13 +104,12 @@ class WidgetFactory {
                         "inside log in function _performLogin: " + user.uid);
                     user == null
                         ? scaffoldKey.currentState.showSnackBar(
-                            SnackBar(content: Text("invalid user in")))
+                        SnackBar(content: Text("invalid user in")))
                         : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Home_screen()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Home_screen()));
                   }
-
                 },
               ),
             ],
@@ -174,7 +173,7 @@ class WidgetFactory {
                                 labelText: 'Password',
                                 labelStyle: TextStyle(color: Colors.black54)),
                             validator: (val) =>
-                                val.length < 6 ? 'Password too short.' : null,
+                            val.length < 6 ? 'Password too short.' : null,
                             onSaved: (val) => _password = val,
                           ),
                         ],
@@ -209,7 +208,7 @@ class WidgetFactory {
                 children: <Widget>[
                   snapshot.data == null
                       ? Image.network(
-                          'https://www.fakenamegenerator.com/images/sil-female.png')
+                      'https://www.fakenamegenerator.com/images/sil-female.png')
                       : snapshot.data,
                   //snapshot.data,
                 ],
@@ -223,8 +222,7 @@ class WidgetFactory {
         });
   }
 
-  Widget _populateSearList(
-      BuildContext context, var categorySnapshot, var itemSnapshot) {
+  Widget _populateSearList(BuildContext context, var categorySnapshot, var itemSnapshot) {
     return Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -279,6 +277,7 @@ class WidgetFactory {
             child: const Text('Add'),
             textColor: Colors.amber.shade500,
             onPressed: () {
+              int random = new Random().nextInt(1000);
               if (quantity <= 0) quantity = 1;
               Custom_AppBar().addItemToCart(
                   itemSnapshot.data['itemId'],
@@ -286,8 +285,8 @@ class WidgetFactory {
                   itemSnapshot.data['imageUrl'],
                   itemSnapshot.data['description'],
                   quantity.toString(),
-                  (int.parse(itemSnapshot.data['price']) * quantity)
-                      .toString());
+                  (int.parse(itemSnapshot.data['price']) * quantity).toString(),
+                  random.toString() + "_" + itemSnapshot.data['itemName']);
             },
             shape: new OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),

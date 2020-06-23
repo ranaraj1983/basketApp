@@ -89,111 +89,97 @@ class check_out extends State<Checkout> {
 
     return new Scaffold(
       key: _scaffoldKey,
-      drawer: Custom_Drawer().getDrawer(context),
-      appBar: Custom_AppBar().getAppBar(context),
-      bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
-      //Custom_Drawer().getButtomNavigation(),
-      body: new Column(
-        children: <Widget>[
-          Container(
-              margin: EdgeInsets.all(5.0),
-              child: Card(
-                  child: Container(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          // three line description
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Container(
-                                    alignment: Alignment.center,
-                                    child: Row(
-                                      children: <Widget>[
-                                        Text(
-                                          'Delivery',
-                                          style: TextStyle(
-                                              fontSize: 18.0,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black),
-                                        ),
-                                        IconButton(
-                                            icon: Icon(
-                                              Icons.play_circle_outline,
-                                              color: Colors.blue,
-                                            ),
-                                            onPressed: null)
-                                      ],
-                                    )),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Container(
-                                    alignment: Alignment.center,
-                                    child: Row(
-                                      children: <Widget>[
-                                        Text(
-                                          'Payment',
-                                          style: TextStyle(
-                                              fontSize: 18.0,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black38),
-                                        ),
-                                        IconButton(
-                                            icon: Icon(
-                                              Icons.check_circle,
-                                              color: Colors.black38,
-                                            ),
-                                            onPressed: null)
-                                      ],
-                                    )),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )))),
-          _verticalDivider(),
-          new Container(
-            alignment: Alignment.topLeft,
-            margin:
-                EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
-            child: new Text(
-              'Delivery Address',
-              style: TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0),
-            ),
-          ),
-          WidgetFactory().getAddressBar(context, formKey),
-          _verticalDivider(),
-          new Container(
-            alignment: Alignment.topLeft,
-            margin:
-                EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
-            child: Text(
-              'Order Summary',
-              style: TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0),
-            ),
-          ),
-          Column(
-            children: <Widget>[
-              Observer(
-
-                  builder: (_) =>
-                      Custom_AppBar().getCartListWidgetListView()
+        drawer: Custom_Drawer().getDrawer(context),
+        appBar: Custom_AppBar().getAppBar(context),
+        bottomNavigationBar:
+            Custom_AppBar().getButtomNavigation(context, widget),
+        //Custom_Drawer().getButtomNavigation(),
+        body: ListView(
+          padding: const EdgeInsets.all(8),
+          children: <Widget>[
+            Container(
+              alignment: Alignment.topLeft,
+              margin: EdgeInsets.only(
+                  left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
+              child: new Text(
+                'Delivery Address',
+                style: TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0),
               ),
-            ],
-          ),
+            ),
+            Container(
+              color: Colors.amber[500],
+              child: WidgetFactory().getAddressBar(context, formKey),
+            ),
+            Container(
+              alignment: Alignment.topLeft,
+              margin: EdgeInsets.only(
+                  left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
+              child: Text(
+                'Order Summary',
+                style: TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0),
+              ),
+            ),
+            Container(
+                height: 300,
+                color: Colors.amber[100],
+                child: Observer(
+                    builder: (_) =>
+                        Custom_AppBar().getCartListWidgetListView())),
+            Container(
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  IconButton(icon: Icon(Icons.info), onPressed: null),
+                  Text(
+                    'Total :',
+                    style: TextStyle(
+                        fontSize: 17.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '\₹ ${totalPrice}',
+                    style: TextStyle(fontSize: 17.0, color: Colors.black54),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: OutlineButton(
+                          borderSide: BorderSide(color: Colors.amber.shade500),
+                          child: const Text('CONFIRM ORDER'),
+                          textColor: Colors.amber.shade500,
+                          onPressed: () async {
+                            if (await Auth().getCurrentUserFuture() != null) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          Payment_Screen(totalPrice)));
+                            } else {
+                              WidgetFactory()
+                                  .logInDialog(context, _scaffoldKey, formKey);
+                            }
+                          },
+                          shape: new OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          )),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        )
 
-          Container(
+        /*    Container(
               alignment: Alignment.bottomLeft,
               height: 50.0,
               child: Card(
@@ -243,9 +229,10 @@ class check_out extends State<Checkout> {
                     ),
                   ],
                 ),
-              )),
-        ],
-      ),
+              )
+    ),*/
+
+      //
     );
   }
 

@@ -110,6 +110,10 @@ class _AddProduct_Screen extends State<AddProduct_Screen> {
                     //return Container();
                   }),
               /*GridView.count(
+              crossAxisCount: 3,
+
+            ),*/
+              /*GridView.count(
                           crossAxisCount: 3,
                           crossAxisSpacing: 4,
                           mainAxisSpacing: 4,
@@ -139,6 +143,7 @@ class _AddProduct_Screen extends State<AddProduct_Screen> {
                   setState(() {
                     _image = File(imagePath.path);
                     print("imagePath $_image");
+
                     /*DataCollection().uploadImageToStorageAndProfileImge(
                                   context, _image, null);*/
                   });
@@ -220,13 +225,17 @@ class _AddProduct_Screen extends State<AddProduct_Screen> {
         ),
         actions: <Widget>[
           FlatButton(
-              onPressed: () {
+              onPressed: () async {
                 final FormState form = _categoryFormKey.currentState;
                 form.save();
 
                 print('Email: ${itemName} ::  ${itemId} ::  ${description}');
                 if (itemName != null) {
                   //print("inside click : " + categoryController.text);
+                  String imageUrl = await DataCollection()
+                      .uploadImageToStorageAndProductImge(
+                          context, _image, null, categoryName, itemName);
+
                   DataCollection().addProductToDB(
                       itemName,
                       itemId,

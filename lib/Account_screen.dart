@@ -95,184 +95,169 @@ class account extends State<Account_Screen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 textDirection: TextDirection.ltr,
                 children: <Widget>[
-                  new Container(
-                    margin: EdgeInsets.all(7.0),
+          new Container(
+            margin: EdgeInsets.all(7.0),
             alignment: Alignment.topCenter,
-            height: 260.0,
-            child: new Expanded(
-              //elevation: 3.0,
-              child: Column(
-                children: <Widget>[
-                  new Container(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        margin: const EdgeInsets.all(10.0),
-                        // padding: const EdgeInsets.all(3.0),
-                        child: ClipOval(
-                          child: Row(
-                            children: <Widget>[
-                              Column(
-                                children: <Widget>[
-                                  Container(
-                                    child: WidgetFactory().getImageFromDatabase(
-                                        context, firebaseUser.photoUrl),
+
+            //elevation: 3.0,
+            child: Row(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        GestureDetector(
+                            child: _image == null
+                                ? WidgetFactory().getImageFromDatabase(
+                                    context, firebaseUser.photoUrl)
+                                : Image.file(
+                                    _image,
+                                    width: 150,
+                                    height: 150,
                                   ),
-                                ],
-                              ),
-                              /*WidgetFactory().getImageFromDatabase(
-                                          context, firebaseUser.photoUrl),*/
-                              Container(
-                                child: IconButton(
-                                  icon: Icon(
-                                    FontAwesomeIcons.camera,
-                                    size: 30.0,
-                                  ),
-                                  onPressed: () {
-                                    _getImage(context);
-                                    debugPrint("change image");
-                                  },
-                                ),
-                              ),
-                              FlatButton(
-                                //onPressed: Auth().updateProfileImage(),
-                                child: Text(
-                                  'Change',
-                                  style: TextStyle(
-                                      fontSize: 13.0, color: Colors.blueAccent),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(30.0),
-                                    side: BorderSide(color: Colors.blueAccent)),
-                                onPressed: () {
-                                  DataCollection()
-                                      .uploadImageToStorageAndProfileImge(
-                                          context, _image, _scaffoldKey);
-                                  debugPrint("change image");
-                                },
-                              ),
-                            ],
+                            onTap: () async {
+                              final _picker = ImagePicker();
+                              PickedFile imagePath = await _picker.getImage(
+                                  source: ImageSource.gallery);
+                              setState(() {
+                                _image = File(imagePath.path);
+                                print("imagePath $_image");
+
+                                DataCollection()
+                                    .uploadImageToStorageAndProfileImge(
+                                        context, _image, null);
+                              });
+                            }),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        new Text(
+                          '${firebaseUser.displayName}',
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
                           ),
                         ),
-                      )),
+                        _verticalDivider(),
+                        new Text(
+                          "${firebaseUser.phoneNumber}",
+                          style: TextStyle(
+                              color: Colors.black45,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5),
+                        ),
+                        _verticalDivider(),
+                        new Text(
+                          "${firebaseUser.email}",
+                          style: TextStyle(
+                              color: Colors.black45,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5),
+                        ),
+                        RaisedButton(
+                            child: Text("Change Profile"),
+                            onPressed: () {
+                              _showEditPopUp();
+                            }),
+                      ],
+                    ),
+                  ],
+                ),
 
-                  new Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      new Container(
-                        margin: EdgeInsets.only(
-                            left: 10.0, top: 20.0, right: 5.0, bottom: 5.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            new Text(
-                                      '${firebaseUser.displayName}',
-                                      style: TextStyle(
-                                        color: Colors.black87,
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 0.5,
-                                      ),
-                                    ),
-                                    _verticalDivider(),
-                                    new Text(
-                                      "${firebaseUser.phoneNumber}",
-                                      style: TextStyle(
-                                          color: Colors.black45,
-                                          fontSize: 13.0,
-                                          fontWeight: FontWeight.bold,
-                                          letterSpacing: 0.5),
-                                    ),
-                                    _verticalDivider(),
-                                    new Text(
-                                      "${firebaseUser.email}",
-                                      style: TextStyle(
-                                          color: Colors.black45,
-                                          fontSize: 13.0,
-                                          fontWeight: FontWeight.bold,
-                                          letterSpacing: 0.5),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              new Container(
-                                alignment: Alignment.centerLeft,
-                                child: IconButton(
-                                    icon: ofericon,
-                                    color: Colors.blueAccent,
-                                    onPressed: () {
-                                      _showEditPopUp();
-                                    }
-                                ),
-                              )
-                            ],
-                          ),
-                          // VerticalDivider(),
-                        ],
+                new Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    new Container(
+                      margin: EdgeInsets.only(
+                          left: 10.0, top: 20.0, right: 5.0, bottom: 5.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[],
                       ),
                     ),
-                  ),
-                  new Container(
-                    margin:
-                    EdgeInsets.only(
-                        left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
-                    child: new Text(
-                      'Addresses',
-                      style: TextStyle(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0),
+                    new Container(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                          icon: ofericon,
+                          color: Colors.blueAccent,
+                          onPressed: () {
+                            _showEditPopUp();
+                          }),
+                    )
+                  ],
+                ),
+                // VerticalDivider(),
+              ],
+            ),
+          ),
+          new Container(
+            margin:
+                EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
+            child: new Text(
+              'Addresses',
+              style: TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0),
+            ),
+          ),
+          WidgetFactory().getAddressBar(context, formKey),
+          new Container(
+            margin: EdgeInsets.all(7.0),
+            child: Card(
+              elevation: 1.0,
+              child: Row(
+                children: <Widget>[
+                  new IconButton(icon: keyloch, onPressed: null),
+                  _verticalD(),
+                  new Text(
+                    'Change Password',
+                    style: TextStyle(fontSize: 15.0, color: Colors.black87),
+                  )
+                ],
+              ),
+            ),
+          ),
+          new Container(
+            margin: EdgeInsets.all(7.0),
+            child: Card(
+              elevation: 1.0,
+              child: Row(
+                children: <Widget>[
+                  new IconButton(icon: clear, onPressed: null),
+                  _verticalD(),
+                  new Text(
+                    'Clear History',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      color: Colors.black87,
                     ),
-                  ),
-                  WidgetFactory().getAddressBar(context, formKey),
-
-                  new Container(
-                    margin: EdgeInsets.all(7.0),
-                    child: Card(
-                      elevation: 1.0,
-                      child: Row(
-                        children: <Widget>[
-                          new IconButton(icon: keyloch, onPressed: null),
-                          _verticalD(),
-                          new Text(
-                            'Change Password',
-                            style: TextStyle(fontSize: 15.0, color: Colors.black87),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  new Container(
-                    margin: EdgeInsets.all(7.0),
-                    child: Card(
-                      elevation: 1.0,
-                      child: Row(
-                        children: <Widget>[
-                          new IconButton(icon: clear, onPressed: null),
-                          _verticalD(),
-                          new Text(
-                            'Clear History',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.black87,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  new Container(
-                    margin: EdgeInsets.all(7.0),
-                    child: Card(
-                      elevation: 1.0,
-                      child: Row(
-                        children: <Widget>[
-                          new IconButton(icon: logout, onPressed: null),
-                          _verticalD(),
-                          new Text(
-                            'Deactivate Account',
-                            style: TextStyle(
+                  )
+                ],
+              ),
+            ),
+          ),
+          new Container(
+            margin: EdgeInsets.all(7.0),
+            child: Card(
+              elevation: 1.0,
+              child: Row(
+                children: <Widget>[
+                  new IconButton(icon: logout, onPressed: null),
+                  _verticalD(),
+                  new Text(
+                    'Deactivate Account',
+                    style: TextStyle(
                               fontSize: 15.0,
                               color: Colors.redAccent,
                             ),

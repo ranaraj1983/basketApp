@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:basketapp/PdfViewerPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/database/DataCollection.dart';
@@ -91,21 +92,6 @@ class oder_history extends State<Oder_History> {
     final file = File('${appDocPath}/example.pdf');
     file.writeAsBytesSync(doc.save());
 
-    /*setState(() {
-      final doc = pdf.Document();
-      doc.addPage(
-        pdf.Page(
-          build: (pdf.Context context) => pdf.Center(
-            child: pdf.Text('Hello World!'),
-          ),
-        ),
-      );
-      //final file = File("example.pdf");
-       //await file.writeAsBytes(doc.save());
-      //final file = File('example.pdf');
-
-    });*/
-    //print(files);
   }
 
   @override
@@ -132,71 +118,120 @@ class oder_history extends State<Oder_History> {
 
     final Orientation orientation = MediaQuery.of(context).orientation;
     return new Scaffold(
-        key: _scaffoldKey,
-        drawer: Navigation_Drawer(new Auth()),
-        bottomNavigationBar:
-            Custom_AppBar().getButtomNavigation(context, widget),
-        appBar: Custom_AppBar().getAppBar(context),
-        body: FutureBuilder(
-          future: DataCollection().getOrderHistoryList(),
-          builder: (_, AsyncSnapshot snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: Text("Loading...."),
-              );
-            } else {
-              return ListView.builder(
-
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  var itemData = snapshot.data[index].data;
-
-                  return SafeArea(
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(
-                              left: 5.0, right: 5.0, bottom: 5.0),
-                          color: Colors.black12,
-                          child: Card(
-                            elevation: 4.0,
-                            child: Column(
-                              children: <Widget>[
-
-                                WidgetFactory().getImageFromDatabase(
-                                    context, itemData['imageUrl']),
-                                ListTile(
-                                  leading: Icon(Icons.album, size: 50),
-                                  title: Text(itemData['itemName']),
-                                  subtitle: Text(itemData['price']),
-                                ),
-
-                              ],
-                            ),
-
-                          ),
-                        ),
-                        RaisedButton(
-                          onPressed: () {
-                            _generatePdfAndView(context, itemData);
-                            print("clicked");
-                          },
-                          child: Text("Invoice"),
-                        ),
-                        //Text("test"),
-                      ],
-                    ),
-                  );
-                },
-              );
-            }
-          },
-
-        )
-
+      key: _scaffoldKey,
+      drawer: Navigation_Drawer(new Auth()),
+      bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
+      appBar: Custom_AppBar().getAppBar(context),
+      body: _getOrderHistoryPage(context),
     );
   }
 
+  Widget _getOrderHistoryPage(BuildContext context) {
+    return FutureBuilder(
+      future: DataCollection().getOrderHistoryList(),
+      builder: (_, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: Text("Loading...."),
+          );
+        } else {
+          return ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              var itemData = snapshot.data[index].data;
+
+              return Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      margin:
+                          EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
+                      color: Colors.black12,
+                      child: Card(
+                        elevation: 4.0,
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Column(
+                                  children: <Widget>[
+                                    WidgetFactory().getImageFromDatabase(
+                                        context, itemData['imageUrl']),
+                                  ],
+                                ),
+                                Column(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Row(
+                                            children: <Widget>[
+                                              Text(itemData['itemName']),
+                                            ],
+                                          ),
+                                          VerticalDivider(),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Text(itemData['price']),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Column(
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        RaisedButton(
+                                          onPressed: () {
+                                            _generatePdfAndView(
+                                                context, itemData);
+                                            print("clicked");
+                                          },
+                                          child: Text("Invoice"),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            RaisedButton(
+                                              onPressed: () {
+                                                _cancelOrder(context, itemData);
+                                                print("clicked");
+                                              },
+                                              child: Text("Cancel"),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    //Text("test"),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
+  }
   _verticalDivider() => Container(
     padding: EdgeInsets.all(2.0),
   );
@@ -248,5 +283,9 @@ class oder_history extends State<Oder_History> {
         mText = "Press to hide";
       }
     });
+  }
+
+  void _cancelOrder(BuildContext context, itemData) {
+    DataCollection().cancelCustomerOrder(itemData);
   }
 }

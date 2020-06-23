@@ -31,9 +31,9 @@ abstract class _Cart_Counter with Store {
 
   @action
   void addCartItemToBusket(String itemId, String itemName, String imageUrl,
-      String description, String quantity, String price) {
+      String description, String quantity, String price, String itemUniqueId) {
     final cart = Product_Item(itemId, itemName, imageUrl, description, quantity,
-        price, null, null, null, null, null, null, null);
+        price, null, null, null, null, null, null, null, itemUniqueId);
     cartList.add(cart);
     //list.value
   }

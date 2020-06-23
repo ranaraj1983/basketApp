@@ -18,7 +18,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       theme: new ThemeData(
-          //fontFamily: GoogleFonts.getFont('Lato'),
+          brightness: Brightness.light,
+          fontFamily: 'Raleway',
           primaryColor: Colors.white,
           primaryColorDark: Colors.white30,
           accentColor: Colors.blue),

@@ -1,4 +1,5 @@
 class Product_Item {
+  String itemUniqueId;
   String itemId;
   String itemName;
   String imageUrl;
@@ -13,8 +14,7 @@ class Product_Item {
   String unit;
   String brand;
 
-  Product_Item(
-      this.itemId,
+  Product_Item(this.itemId,
       this.itemName,
       this.imageUrl,
       this.description,
@@ -26,5 +26,6 @@ class Product_Item {
       this.location,
       this.orderDateTime,
       this.unit,
-      this.brand);
+      this.brand,
+      this.itemUniqueId);
 }

@@ -56,21 +56,27 @@ class _Navigation_Drawer extends State<Navigation_Drawer> {
         child: UserAccountsDrawerHeader(
       accountName: new Text("${firebaseUser.displayName}"),
       accountEmail: new Text("${firebaseUser.email}"),
+      decoration: new BoxDecoration(
+        backgroundBlendMode: BlendMode.difference,
+        color: Colors.indigo[700],
+        shape: BoxShape.circle,
+        gradient: new LinearGradient(
+            colors: [Colors.red, Colors.cyan],
+            begin: Alignment.centerRight,
+            end: new Alignment(-1.0, -1.0)),
+        //boxShadow:
+      ),
       /*decoration: new BoxDecoration(
-          backgroundBlendMode: BlendMode.difference,
-          color: Colors.white30,
-          image: new DecorationImage(
-            image: new ExactAssetImage('assets/images/veg.jpg'),
-            fit: BoxFit.cover,
-          ),
-        ),*/
-      currentAccountPicture: ClipOval(
-        child: Row(
-          children: <Widget>[
-            WidgetFactory()
-                .getImageFromDatabase(context, firebaseUser.photoUrl),
-          ],
-        ),
+              backgroundBlendMode: BlendMode.difference,
+              color: Colors.white30,
+              image: new DecorationImage(
+                image: new ExactAssetImage('assets/images/veg.jpg'),
+                fit: BoxFit.cover,
+              ),
+            ),*/
+      currentAccountPicture: Card(
+        child: WidgetFactory()
+            .getImageFromDatabase(context, firebaseUser.photoUrl),
       ),
     ));
   }

@@ -83,29 +83,36 @@ class DataCollection {
   void addCustomerCartToDatabase(ObservableList<Product_Item> cartList) async {
     String userId = await Auth().getCurrentUserId();
     //List<Cart_List> listOfOrder = new List<Cart_List>();
+
     Random random = new Random();
+    int randomNumber = random.nextInt(100000);
+
+    String masterOrderId = "#GMDI" + randomNumber.toString();
+
+    CollectionReference masterOrderSnapshot = firestoreInstance
+        .collection("User")
+        .document(userId)
+        .collection("orders")
+        .document(masterOrderId)
+        .collection(masterOrderId);
+
     cartList.forEach((element) {
-      int randomNumber = random.nextInt(100);
+      String orderId = "#GMDI" + new Random().toString();
       try {
-        firestoreInstance
-            .collection("User")
-            .document(userId)
-            .collection("orders")
-            .document()
-            .setData(({
+        masterOrderSnapshot.document(element.itemName).setData(({
               'itemId': element.itemId,
               'itemName': element.itemName,
               'imageUrl': element.imageUrl,
               'description': element.description,
               'quantity': element.quantity,
               'price': element.price,
-              'orderId': "#GM" + randomNumber.toString(),
+              'orderId': orderId,
               "timestamp": new DateTime.now(),
               //"location":
-          "orderStatus": "PLACED",
-          "paymentOption": "COD",
-          "totoalAmount": "2000"
-        }));
+              "orderStatus": "PLACED",
+              "paymentOption": "COD",
+              "totoalAmount": "2000"
+            }));
       } catch (error) {
         debugPrint(error.toString());
       }
@@ -240,19 +247,20 @@ class DataCollection {
         SnackBar(content: Text('Profile Picture Uploaded')));*/
   }
 
-  Future uploadImageToStorageAndProductImge(
-      BuildContext context,
+  Future uploadImageToStorageAndProductImge(BuildContext context,
       File file,
       GlobalKey<ScaffoldState> _scaffoldKey,
-      String productName,
-      String categoryName) async {
+      String categoryName,
+      String productName) async {
     String fileName = path.basename(file.path);
     StorageReference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child(fileName);
+    FirebaseStorage.instance.ref().child(
+        "/category/$categoryName/item/" + fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(file);
     var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
     String url = dowurl.toString();
-    _updateProductImageUrl(categoryName, url, productName);
+    return url;
+    //_updateProductImageUrl(categoryName, url, productName);
     //Auth().updateProfileImage(url);
     //StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
 
@@ -271,8 +279,8 @@ class DataCollection {
     Auth().updateProfileImage(url);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
 
-    _scaffoldKey.currentState.showSnackBar(
-        SnackBar(content: Text('Profile Picture Uploaded')));
+/*    _scaffoldKey.currentState.showSnackBar(
+        SnackBar(content: Text('Profile Picture Uploaded')));*/
   }
 
   void updateUserProfile(String userId) {
@@ -337,5 +345,9 @@ class DataCollection {
 
         }
     );
+  }
+
+  void cancelCustomerOrder(itemData) async {
+    String userId = await Auth().getCurrentUserId();
   }
 }

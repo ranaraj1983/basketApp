@@ -81,12 +81,12 @@ mixin _$Cart_Counter on _Cart_Counter, Store {
 
   @override
   void addCartItemToBusket(String itemId, String itemName, String imageUrl,
-      String description, String quantity, String price) {
+      String description, String quantity, String price, String itemUniqueId) {
     final _$actionInfo = _$_Cart_CounterActionController.startAction(
         name: '_Cart_Counter.addCartItemToBusket');
     try {
-      return super.addCartItemToBusket(
-          itemId, itemName, imageUrl, description, quantity, price);
+      return super.addCartItemToBusket(itemId, itemName, imageUrl, description,
+          quantity, price, itemUniqueId);
     } finally {
       _$_Cart_CounterActionController.endAction(_$actionInfo);
     }

@@ -37,20 +37,23 @@ class Custom_AppBar {
 
   Widget getCartListWidgetListView() {
     return ListView.builder(
-        scrollDirection: Axis.vertical,
+
+        //scrollDirection: Axis.vertical,
         shrinkWrap: true,
         itemCount: cartCounter.cartList.length,
         itemBuilder: (BuildContext context, int index) {
           return Container(
             //height: MediaQuery.of(context).size.height,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              textDirection: TextDirection.ltr,
               children: <Widget>[
                 Divider(height: 15.0),
                 Container(
                   padding: EdgeInsets.all(5.0),
                   child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    //mainAxisSize: MainAxisSize.max,
+                    //crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(cartCounter.cartList[index].itemName,
@@ -76,8 +79,9 @@ class Custom_AppBar {
                         padding: EdgeInsets.all(8.0),
                         splashColor: Colors.blueAccent,
                         onPressed: () {
+                          print(cartCounter.cartList[index].itemId);
                           Custom_AppBar().removeItemFromCart(cartCounter
-                              .cartList[index].itemId);
+                              .cartList[index].itemUniqueId);
                         },
                         child: Text(
                           "Cancel",
@@ -87,6 +91,8 @@ class Custom_AppBar {
                   ),
 
                 ),
+                Divider(height: 15.0),
+                VerticalDivider(),
                 // Divider(height: 15.0),
               ],
             ),
@@ -95,13 +101,20 @@ class Custom_AppBar {
   }
 
   void addItemToCart(String itemId, String itemName, String imageUrl,
-      String description, String quantity, String price) {
+      String description, String quantity, String price, String itemUniqueId) {
     cartCounter.addCartItemToBusket(
-        itemId, itemName, imageUrl, description, quantity, price);
+        itemId,
+        itemName,
+        imageUrl,
+        description,
+        quantity,
+        price,
+        itemUniqueId);
   }
 
   void removeItemFromCart(String itemId) {
-    cartCounter.cartList.removeWhere((element) => element.itemId == itemId);
+    cartCounter.cartList.removeWhere((element) =>
+    element.itemUniqueId == itemId);
     //cartCounter.removeCartItemFromBusket();
   }
 
@@ -209,49 +222,11 @@ class Custom_AppBar {
       },
     );
   }
-/* Widget getAppBar(BuildContext context) {
-    return AppBar(
 
-      title: Text("Demo state app"),
-      leading: IconButton(
-        icon: Icon(Icons.shopping_cart, color: Colors.black),
-        onPressed: () => {
-          cartCounter.increment()
-        },
-
-      ),
-      actions: <Widget>[
-        Observer(
-          builder: (_) => Text(
-              "${cartCounter.cartList.length}",
-                style: TextStyle(fontSize: 30),
-          ),
-        ),
-        IconButton(
-            icon: Icon(Icons.arrow_right),
-            onPressed: () =>Navigator.push(context, MaterialPageRoute(
-              builder: (context) =>State_Check_Screen(),
-            ))
-        ),
-        IconButton(
-            icon: Icon(Icons.home),
-            onPressed: () =>Navigator.push(context, MaterialPageRoute(
-              builder: (context) =>MyHomePage(),
-            ))
-        ),
-        IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () =>Navigator.pop(context)
-        ),
-      ],
-    );
-  }*/
 }
 
 class ItemSearchDelegate extends SearchDelegate<Product_Item> {
-  //DataCollection().getListOfProductItem();
-  //loadItemList();
-  //DataCollection().getListOfProductItem(output);
+
   List<Product_Item> output = new List<Product_Item>();
 
   @override
@@ -278,12 +253,7 @@ class ItemSearchDelegate extends SearchDelegate<Product_Item> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    //Future result =  DataCollection().getListOfProductItem(output);
 
-    //print(value);
-    /*output = query.isEmpty? output:
-     output.where((element) => element.itemName.toUpperCase().
-        startsWith(query.toUpperCase())).toList();*/
     return Container(
       child: FutureBuilder(
         future: DataCollection().getCategoryList(),

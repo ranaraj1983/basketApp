@@ -59,9 +59,7 @@ class item_details extends State<Item_Details> {
       print(quantity);
     }
 
-    print(quantity);
 
-    // TODO: implement build
     final ThemeData theme = Theme.of(context);
     final TextStyle titleStyle =
     theme.textTheme.headline5.copyWith(color: Colors.white);

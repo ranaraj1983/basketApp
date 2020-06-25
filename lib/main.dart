@@ -18,11 +18,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       theme: new ThemeData(
-          brightness: Brightness.light,
-          fontFamily: 'Raleway',
-          primaryColor: Colors.white,
-          primaryColorDark: Colors.white30,
-          accentColor: Colors.blue),
+        brightness: Brightness.light,
+        //fontFamily: 'Raleway',
+        primaryColor: Colors.white,
+        primaryColorDark: Colors.white30,
+        accentColor: Colors.blue,
+        bottomAppBarColor: Colors.blue,
+        textTheme: GoogleFonts.pangolinTextTheme(
+          Theme.of(context).textTheme,
+        ),
+      ),
+
       //home: new Item_Screen(),
       home: new MyHomePage(title: 'Groceries'),
     );

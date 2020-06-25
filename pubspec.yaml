@@ -1,5 +1,6 @@
 name: basketapp
-description: A new Flutter application.
+#name: GoMudi
+description: A mobile application for grocery shop
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/help_screen.dart';
 import 'package:basketapp/logind_signup.dart';
-import 'package:basketapp/orderhistory_screen.dart';
+import 'package:basketapp/OderHistory_Screen.dart';
 import 'package:basketapp/setting_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -79,9 +79,9 @@ class Custom_Drawer {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Oder_History(
-                                toolbarname: ' Order History',
-                              )));
+                              builder: (context) => OderHistory_Screen(
+                                    toolbarname: ' Order History',
+                                  )));
                     }),
               ],
             ),

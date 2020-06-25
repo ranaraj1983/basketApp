@@ -1,16 +1,11 @@
-import 'dart:async';
-
 import 'package:basketapp/HomeScreen.dart';
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/model/User.dart';
 import 'package:basketapp/signup_screen.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'database/DataCollection.dart';
 
 class Login_Screen extends StatefulWidget {
@@ -57,12 +52,23 @@ class login extends State<Login_Screen> {
 
   String _validateName(String value) {
     _formWasEdited = true;
-    if (value.isEmpty)
-      return 'Name is required.';
+    if (value.isEmpty) return 'Name is required.';
     final RegExp nameExp = RegExp(r'^[A-Za-z ]+$');
     if (!nameExp.hasMatch(value))
       return 'Please enter only alphabetical characters.';
     return null;
+  }
+
+  FirebaseUser firebaseUser;
+
+  @override
+  void initState() {
+    super.initState();
+    Auth().getCurrentUser().then((user) {
+      setState(() {
+        firebaseUser = user;
+      });
+    });
   }
 
   @override
@@ -72,19 +78,19 @@ class login extends State<Login_Screen> {
     return new Scaffold(
         key: _scaffoldKey,
         drawer: Navigation_Drawer(new Auth()),
-        bottomNavigationBar: Custom_AppBar().getButtomNavigation(
-            context, widget),
+        bottomNavigationBar:
+            Custom_AppBar().getButtomNavigation(context, firebaseUser),
         appBar: Custom_AppBar().getAppBar(context),
         body: SafeArea(
             child: new SingleChildScrollView(
-              child: new Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  new Container(
-                    height: 50.0,
-                    alignment: Alignment.topLeft,
-                    margin: EdgeInsets.only(top: 7.0),
-                    child: new Row(
+          child: new Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              new Container(
+                height: 50.0,
+                alignment: Alignment.topLeft,
+                margin: EdgeInsets.only(top: 7.0),
+                child: new Row(
                     children: <Widget>[
                       _verticalD(),
                       new GestureDetector(
@@ -112,7 +118,7 @@ class login extends State<Login_Screen> {
                                 builder: (context) => Signup_Screen()));
                         },
                         child: new Text(
-                          'Signup',
+                          'Register',
                           style: TextStyle(
                               fontSize: 20.0,
                               color: Colors.black26,
@@ -223,35 +229,7 @@ class login extends State<Login_Screen> {
                                       ),
                                     ),
 
-                                    /*   const SizedBox(height:24.0),
 
-                            new Row(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: <Widget>[
-
-                                new GestureDetector(
-                                  onTap: (){
-
-                                  },
-                                  child: Text('FORGOT PASSWORD?',style: TextStyle(
-                                    color: Colors.blueAccent,fontSize: 13.0
-                                  ),),
-                                ),
-
-                                new GestureDetector(
-                                  onTap: (){
-
-                                  },
-                                  child: Text('LOGIN',style: TextStyle(
-                                      color: Colors.orange,fontSize: 15.0
-                                  ),),
-                                ),
-
-                              ],
-                            )
-
-
-*/
                                   ]
                               ),
                             )

@@ -6,7 +6,6 @@ import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:basketapp/widget/WidgetFactory.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'database/Auth.dart';
@@ -52,7 +51,6 @@ class account extends State<Account_Screen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey<FormState> _userormKey = GlobalKey();
 
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -82,19 +80,19 @@ class account extends State<Account_Screen> {
     bool checkboxValueB = false;
     bool checkboxValueC = false;
 
-
     //List<address> addresLst = loadAddress() as List<address> ;
     return new Scaffold(
       key: _scaffoldKey,
       drawer: Navigation_Drawer(new Auth()),
-      bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
+      bottomNavigationBar:
+          Custom_AppBar().getButtomNavigation(context, firebaseUser),
       appBar: Custom_AppBar().getAppBar(context),
       body: new Container(
           child: SingleChildScrollView(
               child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                textDirection: TextDirection.ltr,
-                children: <Widget>[
+        crossAxisAlignment: CrossAxisAlignment.start,
+        textDirection: TextDirection.ltr,
+        children: <Widget>[
           new Container(
             margin: EdgeInsets.all(7.0),
             alignment: Alignment.topCenter,
@@ -202,7 +200,7 @@ class account extends State<Account_Screen> {
           ),
           new Container(
             margin:
-                EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
+            EdgeInsets.only(left: 12.0, top: 5.0, right: 0.0, bottom: 5.0),
             child: new Text(
               'Addresses',
               style: TextStyle(
@@ -211,17 +209,17 @@ class account extends State<Account_Screen> {
                   fontSize: 18.0),
             ),
           ),
-          WidgetFactory().getAddressBar(context, formKey),
-          new Container(
-            margin: EdgeInsets.all(7.0),
-            child: Card(
-              elevation: 1.0,
-              child: Row(
-                children: <Widget>[
-                  new IconButton(icon: keyloch, onPressed: null),
-                  _verticalD(),
-                  new Text(
-                    'Change Password',
+                  WidgetFactory().getCustomerAddress(context, formKey),
+                  new Container(
+                    margin: EdgeInsets.all(7.0),
+                    child: Card(
+                      elevation: 1.0,
+                      child: Row(
+                        children: <Widget>[
+                          new IconButton(icon: keyloch, onPressed: null),
+                          _verticalD(),
+                          new Text(
+                            'Change Password',
                     style: TextStyle(fontSize: 15.0, color: Colors.black87),
                   )
                 ],
@@ -258,18 +256,16 @@ class account extends State<Account_Screen> {
                   new Text(
                     'Deactivate Account',
                     style: TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.redAccent,
-                            ),
-                          )
-                        ],
-                      ),
+                      fontSize: 15.0,
+                      color: Colors.redAccent,
                     ),
                   )
                 ],
-              )
+              ),
+            ),
           )
-      ),
+                ],
+              ))),
     );
   }
 
@@ -310,8 +306,7 @@ class account extends State<Account_Screen> {
               final FormState form = _userormKey.currentState;
               form.save();
 
-              print(
-                  'Email: ${displayName} ::  ');
+              print('Email: ${displayName} ::  ');
               if (displayName != null) {
                 //print("inside click : " + categoryController.text);
                 Auth().updateDisplayName(displayName);
@@ -338,6 +333,4 @@ class account extends State<Account_Screen> {
       _image = File(imagePath.path);
     });
   }
-
-
 }

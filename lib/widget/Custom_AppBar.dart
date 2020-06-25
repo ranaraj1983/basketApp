@@ -3,13 +3,9 @@ import 'package:basketapp/HomeScreen.dart';
 import 'package:basketapp/checkout_screen.dart';
 import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/database/DataCollection.dart';
-import 'package:basketapp/item_details.dart';
-import 'package:basketapp/item_screen.dart';
 import 'package:basketapp/widget/WidgetFactory.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:basketapp/widget/Cart_Counter.dart';
 import 'package:basketapp/model/Product_Item.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -18,6 +14,7 @@ import 'package:mobx/mobx.dart';
 final cartCounter = Cart_Counter();
 
 class Custom_AppBar {
+
   void addValueToState() {
     cartCounter.increment();
   }
@@ -35,10 +32,10 @@ class Custom_AppBar {
     return cartCounter.cartList;
   }
 
-  Widget getCartListWidgetListView() {
+  Widget getCartListWidgetListView(Checkout checkout) {
     return ListView.builder(
 
-        //scrollDirection: Axis.vertical,
+      //scrollDirection: Axis.vertical,
         shrinkWrap: true,
         itemCount: cartCounter.cartList.length,
         itemBuilder: (BuildContext context, int index) {
@@ -113,8 +110,9 @@ class Custom_AppBar {
   }
 
   void removeItemFromCart(String itemId) {
-    cartCounter.cartList.removeWhere((element) =>
-    element.itemUniqueId == itemId);
+    cartCounter.removeCartItemToBusket(itemId);
+    /* cartCounter.cartList.removeWhere((element) =>
+    element.itemUniqueId == itemId);*/
     //cartCounter.removeCartItemFromBusket();
   }
 
@@ -144,21 +142,60 @@ class Custom_AppBar {
             );
           },
         ),
-        IconButton(
-          icon: Icon(Icons.shopping_cart, color: Colors.black),
-          onPressed: () => {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Checkout(),
-                ))
-          },
-        ),
+
         Observer(
-          builder: (_) => Text(
-            "${cartCounter.cartList.length}",
-            style: TextStyle(fontSize: 30),
-          ),
+            builder: (_) =>
+                Stack(
+
+                  children: <Widget>[
+                    /* Positioned(
+                  //bottom: 48.0,
+                  //left: 10.0,
+                  //right: 10.0,
+                  child: Card(
+                    elevation: 8.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+
+
+                    ),
+                    child: Text("${cartCounter.cartList.length}"),
+                  ),
+                ),*/
+                    Positioned(
+                      child: IconButton(
+                        icon: Icon(Icons.shopping_cart, color: Colors.black),
+                        onPressed: () =>
+                        {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Checkout(),
+                              ))
+                        },
+                      ),
+                    ),
+                    Positioned(
+
+                      child: Container(
+                        child: Text(
+                          "${cartCounter.cartList.length}",
+                          style: TextStyle(
+                              fontSize: 30, backgroundColor: Colors.pink),
+                        ),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16.0),
+                                topRight: Radius.circular(16.0)
+                            )
+                        ),
+                      ),
+
+                    ),
+                  ],
+                )
+
         ),
       ],
     );
@@ -170,7 +207,8 @@ class Custom_AppBar {
 
   int selectedPosition = 0;
 
-  void _navigateToPage(int index, BuildContext context) {
+  void _navigateToPage(int index, BuildContext context,
+      FirebaseUser firebaseUser) {
     if (index == 0) {
       Navigator.push(context, MaterialPageRoute(
         builder: (context) => Home_screen(),
@@ -186,14 +224,20 @@ class Custom_AppBar {
         });
       });
     } else if (index == 2) {
-      Navigator.push(context, MaterialPageRoute(
-        builder: (context) => Account_Screen(new Auth()),
+      firebaseUser == null ? WidgetFactory()
+          .logInDialog(context) : Navigator.push(context, MaterialPageRoute(
+          builder: (context) {
+            //String user;
+            //return
+            return firebaseUser == null ? WidgetFactory()
+                .logInDialog(context) : Account_Screen(new Auth());
+          }
       )
       );
     }
   }
 
-  Widget getButtomNavigation(BuildContext context, Widget widget) {
+  Widget getButtomNavigation(BuildContext context, FirebaseUser firebaseUser) {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
@@ -217,8 +261,7 @@ class Custom_AppBar {
       onTap: (index) {
         selectedPosition = index;
 
-        _navigateToPage(index, context);
-        debugPrint(index.toString() + " :: " + selectedPosition.toString());
+        _navigateToPage(index, context, firebaseUser);
       },
     );
   }

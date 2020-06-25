@@ -6,6 +6,7 @@ import 'package:basketapp/item_details.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:basketapp/widget/WidgetFactory.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Item_Screen extends StatefulWidget {
@@ -21,6 +22,17 @@ class _itemPageState extends State<Item_Screen> {
   _itemPageState(categoryName);
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  FirebaseUser firebaseUser;
+
+  @override
+  void initState() {
+    super.initState();
+    Auth().getCurrentUser().then((user) {
+      setState(() {
+        firebaseUser = user;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +40,8 @@ class _itemPageState extends State<Item_Screen> {
       backgroundColor: Colors.indigo[50],
       key: _scaffoldKey,
       drawer: Navigation_Drawer(new Auth()),
-      bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
+      bottomNavigationBar:
+          Custom_AppBar().getButtomNavigation(context, firebaseUser),
       appBar: Custom_AppBar().getAppBar(context),
       body: _getItemByCategory(widget.categoryName, context),
     );

@@ -4,10 +4,11 @@ import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/item_details.dart';
 import 'package:basketapp/item_screen.dart';
-import 'package:basketapp/orderhistory_screen.dart';
+import 'package:basketapp/OderHistory_Screen.dart';
 import 'package:basketapp/services/Order_Service.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Payment_Screen extends StatefulWidget {
@@ -29,10 +30,20 @@ class _Paymet_Screen extends State<Payment_Screen> {
   bool checkboxValueB = false;
   bool checkboxValueC = false;
 
+  FirebaseUser firebaseUser;
+
+  @override
+  void initState() {
+    super.initState();
+    Auth().getCurrentUser().then((user) {
+      setState(() {
+        firebaseUser = user;
+      });
+    });
+  }
+
   IconData _backIcon() {
-    switch (Theme
-        .of(context)
-        .platform) {
+    switch (Theme.of(context).platform) {
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
         return Icons.arrow_back;
@@ -53,48 +64,19 @@ class _Paymet_Screen extends State<Payment_Screen> {
 
   String toolbarname = 'CheckOut';
 
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
 
     final double height = MediaQuery.of(context).size.height;
 
-    AppBar appBar = AppBar(
-      leading: IconButton(
-        icon: Icon(_backIcon()),
-        alignment: Alignment.centerLeft,
-        tooltip: 'Back',
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-      title: Text(toolbarname),
-      backgroundColor: Colors.white,
-      actions: <Widget>[
-        new Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: new Container(
-            height: 150.0,
-            width: 30.0,
-            child: new GestureDetector(
-              onTap: () {
-                /*Navigator.of(context).push(
-                  new MaterialPageRoute(
-                      builder:(BuildContext context) =>
-                      new CartItemsScreen()
-                  )
-              );*/
-              },
-            ),
-          ),
-        )
-      ],
-    );
 
     return new Scaffold(
       key: _scaffoldKey,
       drawer: Navigation_Drawer(new Auth()),
-      bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
+      bottomNavigationBar: Custom_AppBar().getButtomNavigation(
+          context, firebaseUser),
       appBar: Custom_AppBar().getAppBar(context),
       body: new Column(
         children: <Widget>[
@@ -300,7 +282,7 @@ class _Paymet_Screen extends State<Payment_Screen> {
                             textColor: Colors.green,
                             onPressed: () {
                               DataCollection().addCustomerCartToDatabase(
-                                  Custom_AppBar().getCartList());
+                                  Custom_AppBar().getCartList(), totalPrice);
                               new Timer(new Duration(seconds: 1), () {
                                 debugPrint("Print after 5 seconds");
                                 DataCollection().getOrderHistoryList();
@@ -314,7 +296,8 @@ class _Paymet_Screen extends State<Payment_Screen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Oder_History()));
+                                      builder: (context) =>
+                                          OderHistory_Screen()));
                             },
                             shape: new OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30.0),

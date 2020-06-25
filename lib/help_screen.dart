@@ -3,6 +3,7 @@ import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/item_details.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_range_slider/flutter_range_slider.dart';
 
@@ -16,7 +17,17 @@ class Help_Screen extends StatefulWidget {
 }
 
 class Help extends State<Help_Screen> {
-  List list = ['12', '11'];
+  FirebaseUser firebaseUser;
+
+  @override
+  void initState() {
+    super.initState();
+    Auth().getCurrentUser().then((user) {
+      setState(() {
+        firebaseUser = user;
+      });
+    });
+  }
 
   bool switchValue = false;
 
@@ -50,7 +61,7 @@ class Help extends State<Help_Screen> {
         key: _scaffoldKey,
         drawer: Navigation_Drawer(new Auth()),
         bottomNavigationBar:
-            Custom_AppBar().getButtomNavigation(context, widget),
+        Custom_AppBar().getButtomNavigation(context, firebaseUser),
         appBar: Custom_AppBar().getAppBar(context),
         body: Container(
           child: Column(

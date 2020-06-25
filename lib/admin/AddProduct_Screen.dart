@@ -5,6 +5,7 @@ import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:basketapp/widget/WidgetFactory.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -20,13 +21,16 @@ class _AddProduct_Screen extends State<AddProduct_Screen> {
   File _image;
   String categoryName;
 
+  FirebaseUser firebaseUser;
+
   @override
   void initState() {
     super.initState();
-    setState(() {
-      categoryName = "Beverrages";
+    Auth().getCurrentUser().then((user) {
+      setState(() {
+        firebaseUser = user;
+      });
     });
-    //prepareDirPath();
   }
 
   @override
@@ -34,7 +38,8 @@ class _AddProduct_Screen extends State<AddProduct_Screen> {
     return Scaffold(
       key: _scaffoldKey,
       drawer: Navigation_Drawer(new Auth()),
-      bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
+      bottomNavigationBar:
+          Custom_AppBar().getButtomNavigation(context, firebaseUser),
       appBar: Custom_AppBar().getAppBar(context),
       body: _addProductScreenBody(context),
     );
@@ -93,12 +98,6 @@ class _AddProduct_Screen extends State<AddProduct_Screen> {
                                     print(itemValue + " :: " + categoryName);
                                   });
                                   return Text(itemValue);
-                                  /*SnackBar(
-                                  content: Text(
-                                    'Selected Currency value is $itemValue',
-                                    style: TextStyle(color: Color(0xff11b719)),
-                                  ),
-                                );*/
                                 },
                               ),
                             ],
@@ -109,28 +108,8 @@ class _AddProduct_Screen extends State<AddProduct_Screen> {
 
                     //return Container();
                   }),
-              /*GridView.count(
-              crossAxisCount: 3,
 
-            ),*/
-              /*GridView.count(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 4,
-                          mainAxisSpacing: 4,
-                          primary: false,
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.all(20),
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: (){},
-                              child: Container(
-                                color: Colors.black12,
-                                child: Icon(FontAwesomeIcons.plusCircle),
-                              ),
-                            ),
-                          ],
 
-                        ),*/
               GestureDetector(
                 child: _image == null
                     ? WidgetFactory().getImageFromDatabase(context,

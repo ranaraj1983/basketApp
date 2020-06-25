@@ -66,13 +66,14 @@ class WidgetFactory {
     );
   }
 
-  Future<void> logInDialog(BuildContext context,
-      GlobalKey<ScaffoldState> scaffoldKey,
-      GlobalKey<FormState> formKey) async {
+  GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  GlobalKey<FormState> formKey = new GlobalKey<FormState>();
+
+  logInDialog(BuildContext context) {
     String _email;
     String _password;
 
-    return showDialog<void>(
+    showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -409,17 +410,13 @@ class WidgetFactory {
                                 formKey.currentState.setState(() =>
                                 mobilenumber = val),
                           ),
-
-                        ]
-                    )
-                )
-            ),
+                ]))),
           );
-        }
-    );
+        });
   }
 
-  Widget getAddressBar(BuildContext context, GlobalKey<FormState> formKey) {
+  Widget getCustomerAddress(
+      BuildContext context, GlobalKey<FormState> formKey) {
     return Container(
         height: 165.0,
         child: ListView(

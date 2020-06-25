@@ -1,10 +1,8 @@
-import 'package:basketapp/HomeScreen.dart';
 import 'package:basketapp/Payment_Screen.dart';
 import 'package:basketapp/database/Auth.dart';
-import 'package:basketapp/database/DataCollection.dart';
-import 'package:basketapp/main.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Custom_Drawer.dart';
+import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:basketapp/widget/WidgetFactory.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,24 +10,14 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 
 class Checkout extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => check_out();
+  State<StatefulWidget> createState() => _CheckOut_Screen();
 }
 
-class Item {
-  final String itemName;
-  final String itemQun;
-  final String itemPrice;
 
-  Item({this.itemName, this.itemQun, this.itemPrice});
-}
-
-class check_out extends State<Checkout> {
+class _CheckOut_Screen extends State<Checkout> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  bool checkboxValueA = true;
-  bool checkboxValueB = false;
-  bool checkboxValueC = false;
   String _email;
   String _password;
   final formKey = GlobalKey<FormState>();
@@ -46,53 +34,38 @@ class check_out extends State<Checkout> {
     return null;
   }
 
+  int totalPrice = 0;
 
+  FirebaseUser firebaseUser;
+
+  @override
+  void initState() {
+    super.initState();
+    Auth().getCurrentUser().then((value) {
+      setState(() {
+        value != null ? firebaseUser = value : firebaseUser = null;
+      });
+    });
+    setState(() {
+      totalPrice = Custom_AppBar().getCartTotalPrice();
+    });
+    //prepareDirPath();
+  }
 
   @override
   Widget build(BuildContext context) {
 
 
     final double height = MediaQuery.of(context).size.height;
-    int totalPrice = Custom_AppBar().getCartTotalPrice();
 
-    AppBar appBar = AppBar(
-      leading: IconButton(
-        icon: Icon(_backIcon()),
-        alignment: Alignment.centerLeft,
-        tooltip: 'Back',
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-      title: Text("toolbarname"),
-      backgroundColor: Colors.white,
-      actions: <Widget>[
-        new Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: new Container(
-            height: 150.0,
-            width: 30.0,
-            child: new GestureDetector(
-              onTap: () {
-                /*Navigator.of(context).push(
-                  new MaterialPageRoute(
-                      builder:(BuildContext context) =>
-                      new CartItemsScreen()
-                  )
-              );*/
-              },
-            ),
-          ),
-        )
-      ],
-    );
+
 
     return new Scaffold(
-      key: _scaffoldKey,
-        drawer: Custom_Drawer().getDrawer(context),
+        key: _scaffoldKey,
+        drawer: Navigation_Drawer(new Auth()),
         appBar: Custom_AppBar().getAppBar(context),
         bottomNavigationBar:
-            Custom_AppBar().getButtomNavigation(context, widget),
+        Custom_AppBar().getButtomNavigation(context, firebaseUser),
         //Custom_Drawer().getButtomNavigation(),
         body: ListView(
           padding: const EdgeInsets.all(8),
@@ -111,7 +84,8 @@ class check_out extends State<Checkout> {
             ),
             Container(
               color: Colors.amber[500],
-              child: WidgetFactory().getAddressBar(context, formKey),
+              child: firebaseUser == null ? Text("") : WidgetFactory()
+                  .getCustomerAddress(context, formKey),
             ),
             Container(
               alignment: Alignment.topLeft,
@@ -130,7 +104,9 @@ class check_out extends State<Checkout> {
                 color: Colors.amber[100],
                 child: Observer(
                     builder: (_) =>
-                        Custom_AppBar().getCartListWidgetListView())),
+                        Custom_AppBar().getCartListWidgetListView(Checkout())
+                )
+            ),
             Container(
               child: Row(
                 mainAxisSize: MainAxisSize.max,
@@ -144,10 +120,22 @@ class check_out extends State<Checkout> {
                         color: Colors.black,
                         fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    '\₹ ${totalPrice}',
-                    style: TextStyle(fontSize: 17.0, color: Colors.black54),
+                  Observer(
+                    builder: (_) =>
+                        Stack(
+                          children: <Widget>[
+
+                            Text(
+                              '\₹ ${cartCounter.totalPrice.value}',
+                              style: TextStyle(
+                                  fontSize: 17.0, color: Colors.black54),
+                            ),
+                          ],
+                        ),
+
                   ),
+
+
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
@@ -165,7 +153,7 @@ class check_out extends State<Checkout> {
                                           Payment_Screen(totalPrice)));
                             } else {
                               WidgetFactory()
-                                  .logInDialog(context, _scaffoldKey, formKey);
+                                  .logInDialog(context);
                             }
                           },
                           shape: new OutlineInputBorder(
@@ -179,60 +167,7 @@ class check_out extends State<Checkout> {
           ],
         )
 
-        /*    Container(
-              alignment: Alignment.bottomLeft,
-              height: 50.0,
-              child: Card(
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    IconButton(icon: Icon(Icons.info), onPressed: null),
-                    Text(
-                      'Total :',
-                      style: TextStyle(
-                          fontSize: 17.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      '\₹ ${totalPrice}',
-                      style: TextStyle(fontSize: 17.0, color: Colors.black54),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: OutlineButton(
-                            borderSide:
-                            BorderSide(color: Colors.amber.shade500),
-                            child: const Text('CONFIRM ORDER'),
-                            textColor: Colors.amber.shade500,
-                            onPressed: () async {
-                              if (await Auth().getCurrentUserFuture() != null) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            Payment_Screen(totalPrice)
-                                    )
-                                );
-                              } else {
-                                WidgetFactory().logInDialog(
-                                    context, _scaffoldKey, formKey);
-                              }
-                            },
-                            shape: new OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            )),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-    ),*/
 
-      //
     );
   }
 

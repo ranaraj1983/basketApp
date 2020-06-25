@@ -1,17 +1,14 @@
 import 'dart:io';
-
 import 'package:basketapp/HomeScreen.dart';
 import 'package:basketapp/admin/AdminConsole.dart';
 import 'package:basketapp/database/Auth.dart';
-import 'package:basketapp/database/DataCollection.dart';
 import 'package:basketapp/help_screen.dart';
 import 'package:basketapp/logind_signup.dart';
-import 'package:basketapp/orderhistory_screen.dart';
+import 'package:basketapp/OderHistory_Screen.dart';
 import 'package:basketapp/setting_screen.dart';
 import 'package:basketapp/widget/WidgetFactory.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class Navigation_Drawer extends StatefulWidget {
   Navigation_Drawer(this.auth);
@@ -60,20 +57,27 @@ class _Navigation_Drawer extends State<Navigation_Drawer> {
         backgroundBlendMode: BlendMode.difference,
         color: Colors.indigo[700],
         shape: BoxShape.circle,
+        /*image: new DecorationImage(
+              image:new ExactAssetImage(
+                  'images/goMudilogo.png'
+              ),
+              fit: BoxFit.contain,
+
+            ),*/
         gradient: new LinearGradient(
-            colors: [Colors.red, Colors.cyan],
+            colors: [Colors.yellowAccent, Colors.deepOrange],
             begin: Alignment.centerRight,
             end: new Alignment(-1.0, -1.0)),
         //boxShadow:
       ),
       /*decoration: new BoxDecoration(
-              backgroundBlendMode: BlendMode.difference,
-              color: Colors.white30,
-              image: new DecorationImage(
-                image: new ExactAssetImage('assets/images/veg.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),*/
+                  backgroundBlendMode: BlendMode.difference,
+                  color: Colors.white30,
+                  image: new DecorationImage(
+                    image: new ExactAssetImage('assets/images/veg.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                ),*/
       currentAccountPicture: Card(
         child: WidgetFactory()
             .getImageFromDatabase(context, firebaseUser.photoUrl),
@@ -86,13 +90,13 @@ class _Navigation_Drawer extends State<Navigation_Drawer> {
       child: ListView(
         children: <Widget>[
           _getUserProfile(),
-          _getNavBarListWidget(name, Icons.favorite),
+          //_getNavBarListWidget(name, Icons.favorite),
           new Divider(),
           _getNavBarListWidget("Order History", Icons.history),
           new Divider(),
           _getNavBarListWidget("Settings", Icons.settings),
-          new Divider(),
-          _getNavBarListWidget("Dashboard", Icons.dashboard),
+          //new Divider(),
+          //_getNavBarListWidget("Dashboard", Icons.dashboard),
           new Divider(),
           _getNavBarListWidget("Help", Icons.help),
           new Divider(),
@@ -107,7 +111,7 @@ class _Navigation_Drawer extends State<Navigation_Drawer> {
 
   Widget _getNavBarListWidget(String text, IconData ions) {
     return Card(
-      elevation: 4.0,
+
       child: new ListTile(
           leading: Icon(ions),
           title: new Text(
@@ -144,10 +148,12 @@ class _Navigation_Drawer extends State<Navigation_Drawer> {
                   MaterialPageRoute(builder: (context) => AdminConsole()));
             } else if (text == "Order History") {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Oder_History()));
+                  MaterialPageRoute(
+                      builder: (context) => OderHistory_Screen()));
             } else if (text == "") {} else if (text == "") {} else
             if (text == "") {} else if (text == "") {} else if (text == "") {}
-          }),
+          }
+      ),
     );
   }
 
@@ -156,10 +162,11 @@ class _Navigation_Drawer extends State<Navigation_Drawer> {
       child: ListView(
         children: <Widget>[
           _getHeaderWidget(),
+          _getNavBarListWidget("Home", Icons.help),
           _getNavBarListWidget("Sign in", Icons.help),
           _getNavBarListWidget("Settings", Icons.power_settings_new),
           _getNavBarListWidget("Help", Icons.help),
-          _getNavBarListWidget("Sign in", Icons.airline_seat_flat),
+          //_getNavBarListWidget("Sign in", Icons.airline_seat_flat),
         ],
       ),
     );

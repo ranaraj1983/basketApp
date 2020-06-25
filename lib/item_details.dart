@@ -5,6 +5,7 @@ import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:basketapp/widget/WidgetFactory.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Item_Details extends StatefulWidget {
@@ -27,6 +28,18 @@ class item_details extends State<Item_Details> {
   int item = 0;
 
   item_details(this.toolbarname, this.dataSource);
+
+  FirebaseUser firebaseUser;
+
+  @override
+  void initState() {
+    super.initState();
+    Auth().getCurrentUser().then((user) {
+      setState(() {
+        firebaseUser = user;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,18 +106,18 @@ class item_details extends State<Item_Details> {
         key: _scaffoldKey,
         drawer: Navigation_Drawer(new Auth()),
         bottomNavigationBar:
-        Custom_AppBar().getButtomNavigation(context, widget),
+            Custom_AppBar().getButtomNavigation(context, firebaseUser),
         appBar: Custom_AppBar().getAppBar(context),
         body: Container(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
                 child: Column(children: <Widget>[
-                  Card(
-                    elevation: 4.0,
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+              Card(
+                elevation: 4.0,
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             // photo and title
                             SizedBox(

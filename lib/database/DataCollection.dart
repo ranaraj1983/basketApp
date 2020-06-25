@@ -62,8 +62,16 @@ class DataCollection {
     QuerySnapshot qs =
         await firestoreInstance.collection("categories").getDocuments();
     return qs.documents;
+  }
 
-
+  Future getSubCollectionOfOrder(String masterOrderId) async {
+    String userId = await Auth().getCurrentUserId();
+    QuerySnapshot qs = await firestoreInstance
+        .collection("User/${userId}/orders")
+        .document(masterOrderId)
+        .collection(masterOrderId)
+        .getDocuments();
+    return qs;
   }
 
   Future getOrderHistoryList() async {
@@ -72,15 +80,45 @@ class DataCollection {
     Order order;
 
     QuerySnapshot qs = await firestoreInstance
+        .collection("User/${userId}/orders")
+        .getDocuments();
+/*    qs1.documents.forEach((element) async{
+      await firestoreInstance
+          .collection("User/${userId}/orders").document(element.documentID)
+          .collection(element.documentID)
+    });*/
+    return qs;
+
+/*qs1.then((value) {
+  value.documents.forEach((element) async{
+    //print(element.documentID);
+    await firestoreInstance
+        .collection("User/${userId}/orders").document(element.documentID)
+        .collection(element.documentID).getDocuments().
+    then((value) {
+      value.documents.forEach((ele) {
+        print(ele.data);
+      });
+
+    });
+  });
+
+});*/
+
+/*
+
+    QuerySnapshot qs = await firestoreInstance
         .collection("User")
         .document(userId)
         .collection("orders")
         .getDocuments();
 
-    return qs.documents;
+
+  return qs.documents;*/
   }
 
-  void addCustomerCartToDatabase(ObservableList<Product_Item> cartList) async {
+  void addCustomerCartToDatabase(ObservableList<Product_Item> cartList,
+      int totalAmount) async {
     String userId = await Auth().getCurrentUserId();
     //List<Cart_List> listOfOrder = new List<Cart_List>();
 
@@ -96,14 +134,25 @@ class DataCollection {
         .document(masterOrderId)
         .collection(masterOrderId);
 
+    firestoreInstance
+        .collection("User")
+        .document(userId)
+        .collection("orders")
+        .document(masterOrderId)
+        .setData({
+      'orderId': masterOrderId,
+      'totalAmount': totalAmount,
+      'orderDate': new DateTime.now()
+    });
+
     cartList.forEach((element) {
       String orderId = "#GMDI" + new Random().toString();
       try {
         masterOrderSnapshot.document(element.itemName).setData(({
-              'itemId': element.itemId,
-              'itemName': element.itemName,
-              'imageUrl': element.imageUrl,
-              'description': element.description,
+          'itemId': element.itemId,
+          'itemName': element.itemName,
+          'imageUrl': element.imageUrl,
+          'description': element.description,
               'quantity': element.quantity,
               'price': element.price,
               'orderId': orderId,

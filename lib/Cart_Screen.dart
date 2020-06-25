@@ -5,6 +5,7 @@ import 'package:basketapp/model/Product_Item.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
 import 'package:basketapp/widget/WidgetFactory.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 //import 'package:basketapp/model/ItemProduct.dart';
 import 'package:flutter/material.dart';
@@ -34,11 +35,20 @@ class Cart_Product_Item extends State<Cart_screen> {
 
   String toolbarname = 'My Cart (4)';
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  FirebaseUser firebaseUser;
+
+  @override
+  void initState() {
+    super.initState();
+    Auth().getCurrentUser().then((user) {
+      setState(() {
+        firebaseUser = user;
+      });
+    });
+  }
 
   IconData _backIcon() {
-    switch (Theme
-        .of(context)
-        .platform) {
+    switch (Theme.of(context).platform) {
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
         return Icons.arrow_back;
@@ -95,7 +105,8 @@ class Cart_Product_Item extends State<Cart_screen> {
     return new Scaffold(
       key: _scaffoldKey,
       drawer: Navigation_Drawer(new Auth()),
-      bottomNavigationBar: Custom_AppBar().getButtomNavigation(context, widget),
+      bottomNavigationBar: Custom_AppBar().getButtomNavigation(
+          context, firebaseUser),
       appBar: Custom_AppBar().getAppBar(context),
 
       body: Column(
@@ -181,7 +192,11 @@ class Cart_Product_Item extends State<Cart_screen> {
                                 ],
                               ),
                             ],
-                          ))))),
+                          )
+                      )
+                  )
+              )
+          ),
           Container(
               margin: EdgeInsets.only(
                   left: 12.0, top: 5.0, right: 12.0, bottom: 10.0),

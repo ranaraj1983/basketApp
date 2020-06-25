@@ -3,6 +3,7 @@ import 'package:basketapp/database/Auth.dart';
 import 'package:basketapp/logind_signup.dart';
 import 'package:basketapp/widget/Custom_AppBar.dart';
 import 'package:basketapp/widget/Navigation_Drwer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -50,6 +51,17 @@ class signup extends State<Signup_Screen> {
   bool _autovalidate = false;
   bool _formWasEdited = false;
 
+  FirebaseUser firebaseUser;
+
+  @override
+  void initState() {
+    super.initState();
+    Auth().getCurrentUser().then((user) {
+      setState(() {
+        firebaseUser = user;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,19 +70,19 @@ class signup extends State<Signup_Screen> {
     return new Scaffold(
         key: _scaffoldKey,
         drawer: Navigation_Drawer(new Auth()),
-        bottomNavigationBar: Custom_AppBar().getButtomNavigation(
-            context, widget),
+        bottomNavigationBar:
+            Custom_AppBar().getButtomNavigation(context, firebaseUser),
         appBar: Custom_AppBar().getAppBar(context),
         body: SafeArea(
             child: new SingleChildScrollView(
-              child: new Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  new Container(
-                    height: 50.0,
-                    alignment: Alignment.topLeft,
-                    margin: EdgeInsets.only(top: 7.0),
-                    child: new Row(
+          child: new Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              new Container(
+                height: 50.0,
+                alignment: Alignment.topLeft,
+                margin: EdgeInsets.only(top: 7.0),
+                child: new Row(
                       children: <Widget>[
                         _verticalD(),
                         new GestureDetector(

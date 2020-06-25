@@ -118,32 +118,32 @@ class item_details extends State<Item_Details> {
                   color: Colors.white,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            // photo and title
-                            SizedBox(
-                              height: 250.0,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  WidgetFactory().getImageFromDatabase(
-                                      context, this.dataSource.data['imageUrl']),
-                                ],
-                              ),
-                            ),
-                          ]),
-                    ),
-                  ),
-                  Container(
-                      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
-                      child: DefaultTextStyle(
-                          style: descriptionStyle,
+                      children: <Widget>[
+                        // photo and title
+                        SizedBox(
+                          height: 250.0,
                           child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              // three line description
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
+                              WidgetFactory().getImageFromDatabase(
+                                  context, this.dataSource.data['imageUrl']),
+                            ],
+                          ),
+                        ),
+                      ]),
+                ),
+              ),
+              Container(
+                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+                  child: DefaultTextStyle(
+                      style: descriptionStyle,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          // three line description
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
                                 child: Text(
                                   this.dataSource.data['itemName'],
                                   style: descriptionStyle.copyWith(
